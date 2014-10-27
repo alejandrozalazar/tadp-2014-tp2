@@ -18,7 +18,25 @@ class Transporte(var volumenCarga: VolumenM3 = new VolumenM3(0) /*m3*/ ) {
     validar(puedeTransportarVolumen(envio.volumen))
     validar(puedeManejarElTipoDeEnvio(envio.tipoEnvio))
     validar(puedeEnviarALaSucursalDestino(envio.sucursalDestino))
+    validar(sucursalDestinoTieneSuficienteEspacio(envio.volumen, envio.sucursalDestino))
   }
+
+  def sucursalDestinoTieneSuficienteEspacio(volumen: VolumenM3, sucursalDestino: Sucursal): Boolean =
+    {
+      val enviosAcumuladosEnSucursal = sucursalDestino.enviosAcumulados
+
+      val espacioDisponibleMenosEnviosAcumulados = (enviosAcumuladosEnSucursal.foldLeft(sucursalDestino.volumenDepositoSucursal) { (volumenRestante, envio) =>
+        volumenRestante - envio.volumen
+      })
+
+      val enviosLlegandoASucursal = sucursalDestino.enviosLlegandoASucursal
+
+      val espacioDisponibleEnSucursal = (enviosLlegandoASucursal.foldLeft(espacioDisponibleMenosEnviosAcumulados) { (volumenRestante, envio) =>
+        volumenRestante - envio.volumen
+      })
+
+      volumen <= espacioDisponibleEnSucursal
+    }
 
   def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
     if (enviosAsignados.isEmpty) {
@@ -34,9 +52,9 @@ class Transporte(var volumenCarga: VolumenM3 = new VolumenM3(0) /*m3*/ ) {
 
   def puedeTransportarVolumen(volumen: VolumenM3): Boolean =
     {
-      volumen.value <= (enviosAsignados.foldLeft(volumenCarga) { (volumenRestante, envio) =>
-        new VolumenM3(volumenRestante.value - envio.volumen.value)
-      }).value
+      volumen <= (enviosAsignados.foldLeft(volumenCarga) { (volumenRestante, envio) =>
+        volumenRestante - envio.volumen
+      })
     }
 
   def puedeLlevarEnviosUrgentes: Boolean = false
