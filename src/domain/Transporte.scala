@@ -7,13 +7,14 @@ import unidadmedida.CostoPorKM
 import unidadmedida.VolumenM3
 import exceptions.ValidacionException
 
-class Transporte(var volumenCarga: VolumenM3 = new VolumenM3(0) /*m3*/ ) {
+/*abstract */class Transporte() {
 
-  var costoPorKilometro: CostoPorKM = new CostoPorKM(0)
-  var velocidad: VelocidadKMH = new VelocidadKMH(0)
   private var enviosAsignados: Set[Envio] = Set()
   val tipoEnvio: TipoEnvio = Normal
 
+  def capacidad: VolumenM3 = new VolumenM3(0) /*m3*/
+  def velocidad: VelocidadKMH = new VelocidadKMH(0)
+  def costoPorKilometro: CostoPorKM = new CostoPorKM(0)
   def puedeRealizarEnvio(envio: Envio) = {
     validar(puedeTransportarVolumen(envio.volumen))
     validar(puedeManejarElTipoDeEnvio(envio.tipoEnvio))
@@ -21,21 +22,10 @@ class Transporte(var volumenCarga: VolumenM3 = new VolumenM3(0) /*m3*/ ) {
     validar(sucursalDestinoTieneSuficienteEspacio(envio.volumen, envio.sucursalDestino))
   }
 
+  
   def sucursalDestinoTieneSuficienteEspacio(volumen: VolumenM3, sucursalDestino: Sucursal): Boolean =
     {
-      val enviosAcumuladosEnSucursal = sucursalDestino.enviosAcumulados
-
-      val espacioDisponibleMenosEnviosAcumulados = (enviosAcumuladosEnSucursal.foldLeft(sucursalDestino.volumenDepositoSucursal) { (volumenRestante, envio) =>
-        volumenRestante - envio.volumen
-      })
-
-      val enviosLlegandoASucursal = sucursalDestino.enviosLlegandoASucursal
-
-      val espacioDisponibleEnSucursal = (enviosLlegandoASucursal.foldLeft(espacioDisponibleMenosEnviosAcumulados) { (volumenRestante, envio) =>
-        volumenRestante - envio.volumen
-      })
-
-      volumen <= espacioDisponibleEnSucursal
+      volumen <= sucursalDestino.espacioDisponibleEnSucursal
     }
 
   def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
@@ -52,7 +42,7 @@ class Transporte(var volumenCarga: VolumenM3 = new VolumenM3(0) /*m3*/ ) {
 
   def puedeTransportarVolumen(volumen: VolumenM3): Boolean =
     {
-      volumen <= (enviosAsignados.foldLeft(volumenCarga) { (volumenRestante, envio) =>
+      volumen <= (enviosAsignados.foldLeft(capacidad) { (volumenRestante, envio) =>
         volumenRestante - envio.volumen
       })
     }
@@ -71,4 +61,6 @@ class Transporte(var volumenCarga: VolumenM3 = new VolumenM3(0) /*m3*/ ) {
   def agregarEnvio(envio: Envio): Unit = {
     enviosAsignados = enviosAsignados + envio
   }
+  
+  def sucursalActual = new Sucursal
 }
