@@ -4,10 +4,16 @@ import exceptions.ValidacionException
 import unidadmedida.CostoPorKM
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
+import exceptions.TransporteTieneVolumenInsuficienteParaRealizarElEnvio
+import exceptions.TransporteNoSoportaElTipoEnvioEspecificado
+import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
+import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 
 abstract class Transporte() {
 
   private var enviosAsignados: Set[Envio] = Set()
+  
+  var sucursalActual = Central
   
   def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
   
@@ -15,10 +21,10 @@ abstract class Transporte() {
   def velocidad: VelocidadKMH = new VelocidadKMH(0)
   def costoPorKilometro: CostoPorKM = new CostoPorKM(0)
   def puedeRealizarEnvio(envio: Envio) = {
-    validar(puedeTransportarVolumen(envio.volumen))
-    validar(puedeManejarElTipoDeEnvio(envio.tipoEnvio))
-    validar(puedeEnviarALaSucursalDestino(envio.sucursalDestino))
-    validar(sucursalDestinoTieneSuficienteEspacio(envio.volumen, envio.sucursalDestino))
+    validar(puedeTransportarVolumen(envio.volumen), TransporteTieneVolumenInsuficienteParaRealizarElEnvio())
+    validar(puedeManejarElTipoDeEnvio(envio.tipoEnvio), TransporteNoSoportaElTipoEnvioEspecificado())
+    validar(puedeEnviarALaSucursalDestino(envio.sucursalDestino), TransporteNoSeDirigeALaSucursalDeDestinoEspecificada())
+    validar(sucursalDestinoTieneSuficienteEspacio(envio.volumen, envio.sucursalDestino), LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible())
   }
 
   
@@ -31,8 +37,11 @@ abstract class Transporte() {
     if (enviosAsignados.isEmpty) {
       true
     }
+    else
+    {
+      enviosAsignados.iterator.next.sucursalDestino.equals(sucursalDestino)
+    }
 
-    enviosAsignados.iterator.next.sucursalDestino.equals(sucursalDestino)
   }
 
   def puedeManejarElTipoDeEnvio(tipoEnvioAValidar: TipoEnvio): Boolean = {
@@ -50,16 +59,15 @@ abstract class Transporte() {
   def puedeLlevarEnviosFragiles: Boolean = false
   def poseeRefrigeracion: Boolean = false
 
-  def validar(resultadoValidacion: Boolean): Boolean = {
+  def validar(resultadoValidacion: Boolean, exception: ValidacionException): Boolean = {
     if (!resultadoValidacion) {
-      throw new ValidacionException
+      throw exception
     }
     resultadoValidacion
   }
 
   def agregarEnvio(envio: Envio): Unit = {
+    puedeRealizarEnvio(envio)
     enviosAsignados = enviosAsignados + envio
   }
-  
-  def sucursalActual = new Sucursal
 }

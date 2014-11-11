@@ -2,6 +2,9 @@ package exceptions
 
 import scala.util.control.Exception
 
-class ValidacionException extends Exception {
+abstract class ValidacionException extends Exception 
 
-}
+case class TransporteTieneVolumenInsuficienteParaRealizarElEnvio() extends ValidacionException
+case class TransporteNoSoportaElTipoEnvioEspecificado() extends ValidacionException
+case class TransporteNoSeDirigeALaSucursalDeDestinoEspecificada() extends ValidacionException
+case class LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible() extends ValidacionException
