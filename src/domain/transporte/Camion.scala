@@ -7,6 +7,8 @@ import unidadmedida.VelocidadKMH
 import unidadmedida.VelocidadKMH
 import domain.Normal
 import domain.NecesitaRefrigeracion
+import domain.Urgente
+import domain.Fragil
 
 class Camion extends Transporte {
   
@@ -15,5 +17,5 @@ class Camion extends Transporte {
   override def costoPorKilometro: CostoPorKM = new CostoPorKM(100)
   override def velocidad: VelocidadKMH = new VelocidadKMH(60)
   
-  override def tiposEnvioSoportados = Set(Normal, NecesitaRefrigeracion)
+  override def tiposEnvioSoportados = super.tiposEnvioSoportados + NecesitaRefrigeracion
 }

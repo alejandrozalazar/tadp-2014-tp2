@@ -12,5 +12,4 @@ class Furgoneta extends Transporte {
 	override def costoPorKilometro: CostoPorKM = new CostoPorKM(40)
 	override def velocidad: VelocidadKMH = new VelocidadKMH(80)
 	
-	override def tiposEnvioSoportados = Set(Normal)
 }

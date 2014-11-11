@@ -9,7 +9,7 @@ abstract class Transporte() {
 
   private var enviosAsignados: Set[Envio] = Set()
   
-  def tiposEnvioSoportados: Set[TipoEnvio]
+  def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
   
   def capacidad: VolumenM3 = VolumenM3(0) /*m3*/
   def velocidad: VelocidadKMH = new VelocidadKMH(0)
