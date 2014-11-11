@@ -66,14 +66,48 @@ class TransporteSpec extends FlatSpec with Matchers {
 
   //Las características del transporte deben ser compatibles con las necesidades del envío, es decir,
   //transporte se debe saber si puede llevar envíos urgentes, frágiles y/o posee refrigeración.
+
+  "Un transporte" should "poder verificar si puede realizar un envio normal" in {
+    var camion = new Camion
+    camion.puedeManejarElTipoDeEnvio(Normal) should be(true)
+
+    var avion = new Avion
+    avion.puedeManejarElTipoDeEnvio(Normal) should be(true)
+
+    var furgoneta = new Furgoneta
+    furgoneta.puedeManejarElTipoDeEnvio(Normal) should be(true)
+  }
+
   "Un transporte" should "poder verificar si puede realizar un envio que necesita refrigeracion" in {
     var camion = new Camion
     camion.puedeManejarElTipoDeEnvio(NecesitaRefrigeracion) should be(true)
 
     var avion = new Avion
     avion.puedeManejarElTipoDeEnvio(NecesitaRefrigeracion) should be(false)
-    
+
     var furgoneta = new Furgoneta
     furgoneta.puedeManejarElTipoDeEnvio(NecesitaRefrigeracion) should be(false)
+  }
+
+  "Un transporte" should "poder verificar si puede realizar un envio urgente" in {
+    var camion = new Camion
+    camion.puedeManejarElTipoDeEnvio(Urgente) should be(true)
+
+    var avion = new Avion
+    avion.puedeManejarElTipoDeEnvio(Urgente) should be(true)
+
+    var furgoneta = new Furgoneta
+    furgoneta.puedeManejarElTipoDeEnvio(Urgente) should be(true)
+  }
+
+  "Un transporte" should "poder verificar si puede realizar un envio fragil" in {
+    var camion = new Camion
+    camion.puedeManejarElTipoDeEnvio(Fragil) should be(true)
+
+    var avion = new Avion
+    avion.puedeManejarElTipoDeEnvio(Fragil) should be(true)
+
+    var furgoneta = new Furgoneta
+    furgoneta.puedeManejarElTipoDeEnvio(Fragil) should be(true)
   }
 }
