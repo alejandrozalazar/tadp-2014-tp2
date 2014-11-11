@@ -1,18 +1,17 @@
 package domain
 
+import exceptions.ValidacionException
+import unidadmedida.CostoPorKM
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
-import unidadmedida.CostoPorKM
-import unidadmedida.CostoPorKM
-import unidadmedida.VolumenM3
-import exceptions.ValidacionException
 
-/*abstract */class Transporte() {
+abstract class Transporte() {
 
   private var enviosAsignados: Set[Envio] = Set()
-  val tipoEnvio: TipoEnvio = Normal
-
-  def capacidad: VolumenM3 = new VolumenM3(0) /*m3*/
+  
+  def tiposEnvioSoportados: Set[TipoEnvio]
+  
+  def capacidad: VolumenM3 = VolumenM3(0) /*m3*/
   def velocidad: VelocidadKMH = new VelocidadKMH(0)
   def costoPorKilometro: CostoPorKM = new CostoPorKM(0)
   def puedeRealizarEnvio(envio: Envio) = {
@@ -37,7 +36,7 @@ import exceptions.ValidacionException
   }
 
   def puedeManejarElTipoDeEnvio(tipoEnvioAValidar: TipoEnvio): Boolean = {
-    tipoEnvio.equals(tipoEnvioAValidar)
+    tiposEnvioSoportados.contains(tipoEnvioAValidar)
   }
 
   def puedeTransportarVolumen(volumen: VolumenM3): Boolean =

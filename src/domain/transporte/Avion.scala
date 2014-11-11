@@ -7,13 +7,16 @@ import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
 import domain.Sucursal
 import unidadmedida.Kilometro
+import domain.Normal
 
 class Avion extends Transporte {
 
-  override def capacidad = new VolumenM3(200)
+  override def capacidad = VolumenM3(200)
   override def costoPorKilometro: CostoPorKM = new CostoPorKM(500)
   override def velocidad: VelocidadKMH = new VelocidadKMH(500)
 
+  override def tiposEnvioSoportados = Set(Normal)
+  
   override def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
     super.puedeEnviarALaSucursalDestino(sucursalDestino) && sucursalActual.distanciaASucursal(sucursalDestino) >= new Kilometro(1000)
   }
