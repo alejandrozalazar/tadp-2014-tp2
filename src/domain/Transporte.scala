@@ -11,10 +11,11 @@ import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import unidadmedida.Kilometro
 import scala.collection.mutable.HashSet
 
-abstract class Transporte() {
+abstract class Transporte {
 
   protected var enviosAsignados: Set[Envio] = Set()
-  
+  var poseeGPS:Boolean = false
+  var poseeVideo:Boolean = false
   var sucursalActual = Central
   
   def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
@@ -109,7 +110,7 @@ abstract class Transporte() {
   }
   
   def costoEnvio(): Double = {
-    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes)
+    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra
   }
   
   def costosExtra(costoDePaquetes: Double): Double = {
@@ -133,5 +134,25 @@ abstract class Transporte() {
       	enviosDelTipo.add(envio)
 	}
     enviosDelTipo.size
+  }
+  
+  def costoServiciosExtra(): Double = {
+    var costoExtra: Double= 0
+    
+    if(poseeGPS){
+      costoExtra += costoGPS
+    }
+    if(poseeVideo){
+      costoExtra += costoVideo
+    }
+    costoExtra
+  }
+  
+  def costoGPS() = {
+    0.5 * (new CalculadorDistancia().distanciaTerrestreEntre(origen, destino)) * 2
+  }
+  
+  def costoVideo() = {
+    3.74 * (new CalculadorDistancia().distanciaTerrestreEntre(origen, destino)) * 2
   }
 }

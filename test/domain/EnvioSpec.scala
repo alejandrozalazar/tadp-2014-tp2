@@ -89,6 +89,20 @@ class EnvioSpec extends FlatSpec with Matchers {
     camion3.agregarEnvio(new Envio(Mendoza, BahiaBlanca, 1.m3, Normal))
     camion3.costoVolumenParticular(100) should be(102.22222222222221)
   }
+  
+  "Los transportes" should "sumar al costo por servicios extra (gps y video)" in {
+    val camion = new Camion
+    camion.poseeGPS = true
+    camion.poseeVideo  = true
+    camion.agregarEnvio(new Envio(Mendoza, BahiaBlanca, 1.m3, Normal))
+    camion.costoServiciosExtra should be(848)
+    
+    val avion = new Avion
+    avion.poseeGPS  = true
+    avion.poseeVideo = true
+    avion.agregarEnvio(new Envio(Mendoza, BahiaBlanca, 1.m3, Normal))
+    avion.costoServiciosExtra should be(8488.48)
+  }
 
   "Un cliente" should "poder enviar paquete" in {
     val cliente: Cliente = new Cliente
