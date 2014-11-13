@@ -76,14 +76,30 @@ abstract class Transporte() {
     new Kilometro(new CalculadorDistancia().distanciaTerrestreEntre(origen, destino))
   }
   
-  def costoEnvio() = {
-    val origen = enviosAsignados.head.sucursalOrigen
-    val destino = enviosAsignados.head.sucursalDestino
-    val distancia = distanciaEntre(origen, destino)
-    val costoTransporte = costoPorKilometro.value  * distancia.value // TODO
-    
-    enviosAsignados.foldLeft(costoTransporte.toDouble) { (costoTotal, envio) =>
+  def origen() = {
+    enviosAsignados.head.sucursalOrigen
+  }
+  
+  def destino() = {
+    enviosAsignados.head.sucursalDestino
+  }
+  
+  def costoPaquetes() = {
+    enviosAsignados.foldLeft(0.toDouble) { (costoTotal, envio) =>
 	    costoTotal + envio.costo
-	  }
+	  }    
+  }
+  
+  def costoDistancia() = {
+    val distancia = distanciaEntre(origen, destino)
+    costoPorKilometro.value  * distancia.value // TODO
+  }
+  
+  def costoPeajes() = {
+    0
+  }
+  
+  def costoEnvio() = {
+    costoDistancia + costoPaquetes + costoPeajes
   }
 }

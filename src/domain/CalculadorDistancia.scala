@@ -5,7 +5,7 @@ class CalculadorDistancia {
 	  100.toDouble
 	}
 	def distanciaAereaEntre(sucursal1: Sucursal, sucursal2: Sucursal): Double = {
-	  50.toDouble
+	  1001.toDouble
 	}
 	def cantidadPeajesEntre(sucursal1: Sucursal, sucursal2: Sucursal): Int = {
 	  2

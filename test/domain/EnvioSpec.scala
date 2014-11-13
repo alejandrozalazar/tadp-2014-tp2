@@ -5,6 +5,8 @@ import org.scalatest.Matchers
 import unidadmedida.UnidadesFactory
 import unidadmedida.VolumenM3
 import domain.transporte.Camion
+import domain.transporte.Furgoneta
+import domain.transporte.Avion
 
 class EnvioSpec extends FlatSpec with Matchers {
 
@@ -14,14 +16,33 @@ class EnvioSpec extends FlatSpec with Matchers {
   "El costo de un transporte" should "ser el costo del paquete que transporta" in {
     val transporte = new Camion
     transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Normal))
-    transporte.costoEnvio() should be(10010)
+    transporte.costoPaquetes() should be(10)
   }
   
   "El costo de un transporte" should "ser la suma de los costos de sus paquetes" in {
     val transporte = new Camion
     transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Normal))
     transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Urgente))
-    transporte.costoEnvio() should be(10030)
+    transporte.costoPaquetes() should be(30)
+  }
+  
+  "El costo de un transporte" should "ser el costo por la distancia recorrida" in {
+    val transporte = new Camion
+    transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Normal))
+    transporte.costoDistancia() should be(10000)
+  }
+  
+  "El costo de un transporte" should "ser el costo de los peajes atravesados" in {
+    val envio = new Envio(Central, Mendoza, 1.m3, Normal)
+    val camion = new Camion
+    camion.agregarEnvio(envio)
+    camion.costoPeajes() should be(24)
+    val furgoneta = new Furgoneta
+    furgoneta.agregarEnvio(envio)
+    furgoneta.costoPeajes() should be(12)
+    val avion = new Avion
+    avion.agregarEnvio(envio)
+    avion.costoPeajes() should be(0)
   }
 
   "Un cliente" should "poder enviar paquete" in {

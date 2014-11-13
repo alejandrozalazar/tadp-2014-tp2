@@ -9,6 +9,7 @@ import domain.Normal
 import domain.NecesitaRefrigeracion
 import domain.Urgente
 import domain.Fragil
+import domain.CalculadorDistancia
 
 class Camion extends Transporte {
   
@@ -18,4 +19,8 @@ class Camion extends Transporte {
   override def velocidad: VelocidadKMH = new VelocidadKMH(60)
   
   override def tiposEnvioSoportados = super.tiposEnvioSoportados + NecesitaRefrigeracion
+  
+  override def costoPeajes() = {
+    new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 12 // TODO money
+  }
 }

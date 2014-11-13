@@ -21,10 +21,6 @@ abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: Volumen
     })
     espacioDisponibleEnSucursal
   }
-
-  def distanciaASucursal(otraSucursal: Sucursal): Kilometro = {
-    new Kilometro(50)
-  }
 }
 
 case object Central extends Sucursal(nombre = "Central", volumenDepositoSucursal = VolumenM3(1000))

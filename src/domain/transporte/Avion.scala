@@ -17,7 +17,7 @@ class Avion extends Transporte {
   override def velocidad: VelocidadKMH = new VelocidadKMH(500)
 
   override def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
-    super.puedeEnviarALaSucursalDestino(sucursalDestino) && sucursalActual.distanciaASucursal(sucursalDestino) >= new Kilometro(1000)
+    super.puedeEnviarALaSucursalDestino(sucursalDestino) && distanciaEntre(sucursalActual, sucursalDestino) >= new Kilometro(1000)
   }
   
   override def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
