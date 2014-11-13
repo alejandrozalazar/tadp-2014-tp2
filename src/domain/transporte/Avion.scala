@@ -8,6 +8,7 @@ import unidadmedida.VolumenM3
 import domain.Sucursal
 import unidadmedida.Kilometro
 import domain.Normal
+import domain.CalculadorDistancia
 
 class Avion extends Transporte {
 
@@ -17,5 +18,9 @@ class Avion extends Transporte {
 
   override def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
     super.puedeEnviarALaSucursalDestino(sucursalDestino) && sucursalActual.distanciaASucursal(sucursalDestino) >= new Kilometro(1000)
+  }
+  
+  override def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
+    new Kilometro(new CalculadorDistancia().distanciaAereaEntre(origen, destino))
   }
 }

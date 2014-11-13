@@ -14,14 +14,14 @@ class EnvioSpec extends FlatSpec with Matchers {
   "El costo de un transporte" should "ser el costo del paquete que transporta" in {
     val transporte = new Camion
     transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Normal))
-    transporte.costoEnvio() should be(10)
+    transporte.costoEnvio() should be(10010)
   }
   
   "El costo de un transporte" should "ser la suma de los costos de sus paquetes" in {
     val transporte = new Camion
     transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Normal))
     transporte.agregarEnvio(new Envio(Central, Mendoza, 10.m3, Urgente))
-    transporte.costoEnvio() should be(30)
+    transporte.costoEnvio() should be(10030)
   }
 
   "Un cliente" should "poder enviar paquete" in {

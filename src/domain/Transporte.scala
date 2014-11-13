@@ -8,6 +8,7 @@ import exceptions.TransporteTieneVolumenInsuficienteParaRealizarElEnvio
 import exceptions.TransporteNoSoportaElTipoEnvioEspecificado
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
+import unidadmedida.Kilometro
 
 abstract class Transporte() {
 
@@ -71,8 +72,17 @@ abstract class Transporte() {
     enviosAsignados = enviosAsignados + envio
   }
   
+  def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
+    new Kilometro(new CalculadorDistancia().distanciaTerrestreEntre(origen, destino))
+  }
+  
   def costoEnvio() = {
-    enviosAsignados.foldLeft(0.toDouble) { (costoTotal, envio) =>
+    val origen = enviosAsignados.head.sucursalOrigen
+    val destino = enviosAsignados.head.sucursalDestino
+    val distancia = distanciaEntre(origen, destino)
+    val costoTransporte = costoPorKilometro.value  * distancia.value // TODO
+    
+    enviosAsignados.foldLeft(costoTransporte.toDouble) { (costoTotal, envio) =>
 	    costoTotal + envio.costo
 	  }
   }
