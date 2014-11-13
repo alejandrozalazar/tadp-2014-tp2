@@ -23,4 +23,5 @@ class Avion extends Transporte {
   override def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
     new Kilometro(new CalculadorDistancia().distanciaAereaEntre(origen, destino))
   }
+  
 }

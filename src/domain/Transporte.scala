@@ -12,7 +12,7 @@ import unidadmedida.Kilometro
 
 abstract class Transporte() {
 
-  private var enviosAsignados: Set[Envio] = Set()
+  protected var enviosAsignados: Set[Envio] = Set()
   
   var sucursalActual = Central
   
@@ -100,6 +100,10 @@ abstract class Transporte() {
   }
   
   def costoEnvio() = {
-    costoDistancia + costoPaquetes + costoPeajes
+    costoDistancia + costoPaquetes + costoPeajes + costosExtra
+  }
+  
+  def costosExtra() = {
+    0
   }
 }
