@@ -12,6 +12,8 @@ import domain.Fragil
 import domain.CalculadorDistancia
 import scala.collection.mutable.HashSet
 import domain.Envio
+import domain.Central
+import domain.TipoEnvio
 
 class Camion extends Transporte {
   
@@ -27,17 +29,22 @@ class Camion extends Transporte {
   }
   
   override def costosExtra(costoDePaquetes: Double) = {
-    this.costoRefrigeracion
+    this.costoRefrigeracion + this.costoFinDeMes(costoDePaquetes)
   }
   
   def costoRefrigeracion = {
-	  
-	  val enviosConRefrigeracion: HashSet[Envio] = new HashSet()
-	  for(envio <- this.enviosAsignados ){
-	    if (envio.tipoEnvio.equals(NecesitaRefrigeracion))
-	    	enviosConRefrigeracion.add(envio)
-	  }
-	  
-	  5 * enviosConRefrigeracion.size
+	  5 * cantidadEnviosDelTipo(NecesitaRefrigeracion)
+  }
+  
+  def costoFinDeMes(costo:Double) = {
+    if(this.destino.equals(Central) /*&& el temita de la fecha*/){
+      costo * 0.02
+    } else 0
+  }
+  
+  override def costoVolumenParticular(costoDePaquetes: Double): Double = {
+    if(origen.equals(Central) || destino.equals(Central)){
+      0
+    } else costoDePaquetes * (1 + volumenOcupado.value/capacidad.value)
   }
 }

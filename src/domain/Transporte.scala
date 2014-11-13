@@ -9,6 +9,7 @@ import exceptions.TransporteNoSoportaElTipoEnvioEspecificado
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import unidadmedida.Kilometro
+import scala.collection.mutable.HashSet
 
 abstract class Transporte() {
 
@@ -51,10 +52,18 @@ abstract class Transporte() {
 
   def puedeTransportarVolumen(volumen: VolumenM3): Boolean =
     {
-      volumen <= (enviosAsignados.foldLeft(capacidad) { (volumenRestante, envio) =>
-        volumenRestante - envio.volumen
-      })
+      volumen <= (volumenRestante)
     }
+
+  def volumenRestante: VolumenM3 = {
+    enviosAsignados.foldLeft(capacidad) { (volumenRestante, envio) =>
+        volumenRestante - envio.volumen
+      }
+  }
+  
+  def volumenOcupado: VolumenM3 = {
+    capacidad - volumenRestante
+  }
 
   def puedeLlevarEnviosUrgentes: Boolean = false
   def puedeLlevarEnviosFragiles: Boolean = false
@@ -84,26 +93,45 @@ abstract class Transporte() {
     enviosAsignados.head.sucursalDestino
   }
   
-  def costoPaquetes() = {
+  def costoPaquetes(): Double = {
     enviosAsignados.foldLeft(0.toDouble) { (costoTotal, envio) =>
 	    costoTotal + envio.costo
 	  }    
   }
   
-  def costoDistancia() = {
+  def costoDistancia(): Double = {
     val distancia = distanciaEntre(origen, destino)
     costoPorKilometro.value  * distancia.value // TODO
   }
   
-  def costoPeajes() = {
+  def costoPeajes(): Double = {
     0
   }
   
-  def costoEnvio() = {
-    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes)
+  def costoEnvio(): Double = {
+    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes)
   }
   
   def costosExtra(costoDePaquetes: Double): Double = {
     0
+  }
+  
+  def costoVolumen(costoDePaquetes: Double): Double = {
+    if(volumenOcupado.value <= capacidad.value * 0.2){
+      this.costoVolumenParticular(costoDePaquetes)
+    } else 0
+  }
+  
+  def costoVolumenParticular(costoDePaquetes: Double): Double = {
+    0
+  }
+  
+  def cantidadEnviosDelTipo(tipo:TipoEnvio): Double = {
+    val enviosDelTipo: HashSet[Envio] = new HashSet()
+    for(envio <- this.enviosAsignados ){
+      if (envio.tipoEnvio.equals(tipo))
+      	enviosDelTipo.add(envio)
+	}
+    enviosDelTipo.size
   }
 }

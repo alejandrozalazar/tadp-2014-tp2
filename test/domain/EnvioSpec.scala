@@ -62,9 +62,32 @@ class EnvioSpec extends FlatSpec with Matchers {
     avion2.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
     avion2.costoImpuestos(10) should be(1)
     
-    val avion3 = new Avion
-    avion3.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
-    avion3.costoEnvio should be(500511)
+  }
+  
+  "Los transportes" should "afectar el costo cuando viajan con menos del 20% de su capacidad" in {
+    val avion = new Avion
+    avion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Normal))
+    avion.costoVolumenParticular(100) should be(300)
+    
+    val furgoneta = new Furgoneta
+    furgoneta.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    furgoneta.costoVolumenParticular(100) should be(200)
+    
+    furgoneta.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    furgoneta.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    furgoneta.costoVolumenParticular(100) should be(0)
+    
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Normal))
+    camion.costoVolumenParticular(100) should be(0)
+    
+    val camion2 = new Camion
+    camion2.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion2.costoVolumenParticular(100) should be(0)
+    
+    val camion3 = new Camion
+    camion3.agregarEnvio(new Envio(Mendoza, BahiaBlanca, 1.m3, Normal))
+    camion3.costoVolumenParticular(100) should be(102.22222222222221)
   }
 
   "Un cliente" should "poder enviar paquete" in {

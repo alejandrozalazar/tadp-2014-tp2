@@ -31,8 +31,8 @@ class Avion extends Transporte {
   
   def costoImpuestos(costoDePaquetes: Double): Double = {
     
-    val pais_origen =  enviosAsignados.head.sucursalOrigen.pais
-    val pais_destino = enviosAsignados.head.sucursalDestino.pais
+    val pais_origen =  this.origen.pais
+    val pais_destino = this.destino.pais
     
     if(pais_origen != pais_destino){
       costoDePaquetes * 0.1
@@ -40,4 +40,7 @@ class Avion extends Transporte {
     
   }
   
+  override def costoVolumenParticular(costoDePaquetes:Double):Double = {
+    costoDePaquetes*3
+  }
 }
