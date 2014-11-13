@@ -24,4 +24,20 @@ class Avion extends Transporte {
     new Kilometro(new CalculadorDistancia().distanciaAereaEntre(origen, destino))
   }
   
+  
+  override def costosExtra(costoDePaquetes: Double): Double = {
+    costoImpuestos(costoDePaquetes)
+  }
+  
+  def costoImpuestos(costoDePaquetes: Double): Double = {
+    
+    val pais_origen =  enviosAsignados.head.sucursalOrigen.pais
+    val pais_destino = enviosAsignados.head.sucursalDestino.pais
+    
+    if(pais_origen != pais_destino){
+      costoDePaquetes * 0.1
+    } else return 0
+    
+  }
+  
 }

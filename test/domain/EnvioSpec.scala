@@ -51,6 +51,21 @@ class EnvioSpec extends FlatSpec with Matchers {
     camion.agregarEnvio(envio)
     camion.costoRefrigeracion should be(5)
   }
+  
+  "Los aviones" should "pagar 10% de impuestos cuando van de un pais a otro" in {
+    val envio = new Envio(Central, Mendoza, 1.m3, Normal)
+    val avion = new Avion
+    avion.agregarEnvio(envio)
+    avion.costoImpuestos(10) should be(0)
+    
+    val avion2 = new Avion
+    avion2.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
+    avion2.costoImpuestos(10) should be(1)
+    
+    val avion3 = new Avion
+    avion3.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
+    avion3.costoEnvio should be(500511)
+  }
 
   "Un cliente" should "poder enviar paquete" in {
     val cliente: Cliente = new Cliente

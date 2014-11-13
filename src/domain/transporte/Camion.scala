@@ -26,7 +26,7 @@ class Camion extends Transporte {
     new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 12 // TODO money
   }
   
-  override def costosExtra() = {
+  override def costosExtra(costoDePaquetes: Double) = {
     this.costoRefrigeracion
   }
   

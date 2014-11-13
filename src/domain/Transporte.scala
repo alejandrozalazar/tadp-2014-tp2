@@ -100,10 +100,10 @@ abstract class Transporte() {
   }
   
   def costoEnvio() = {
-    costoDistancia + costoPaquetes + costoPeajes + costosExtra
+    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes)
   }
   
-  def costosExtra() = {
+  def costosExtra(costoDePaquetes: Double): Double = {
     0
   }
 }
