@@ -8,11 +8,17 @@ import domain.transporte.Furgoneta
 import unidadmedida.UnidadesFactory
 import exceptions.ValidacionException
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
+import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
+import unidadmedida.VolumenM3
 
 class TransporteSpec extends FlatSpec with Matchers {
 
   implicit def intToUnidadesFactory(i: Int): UnidadesFactory =
     new UnidadesFactory(i)
+  
+  case object transporteMock extends Transporte(){
+    override def capacidad = VolumenM3(1000)
+  }
 
   //4. Transportes
 
@@ -38,7 +44,7 @@ class TransporteSpec extends FlatSpec with Matchers {
     val transporte = new Camion
     transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 40.m3))
 
-    transporte.puedeTransportarVolumen(10.m3) should be(false)
+    transporte.puedeTransportarVolumen(10.m)3) should be(false)
   }
 
   "Un transporte" should "poder verificar si puede realizar un envio mayor a su capacidad si ya tiene 3 carga" in {
@@ -156,4 +162,15 @@ class TransporteSpec extends FlatSpec with Matchers {
 //  La sucursal de destino debe poseer espacio f ́ısico para poder recibir el env ́ıo. De cada sucursal se
 //volumen de su dep ́osito. El espacio disponible ser ́a el volumen total menos el volumen de los env
 //en la sucursal esperando para partir y menos los env ́ıos que est ́an viajando hacia la sucursal.
+  
+  "La sucursal destino" should "poseer espacio fisico para recibir un envio" in {
+    val sucursalOrigen: Sucursal = Central
+    val sucursalDestino: Sucursal = Mendoza
+    val transporte = transporteMock
+    transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 500.m3))
+    intercept[LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible]{
+	  transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 2.m3))      
+    }
+  }
+  
 }
