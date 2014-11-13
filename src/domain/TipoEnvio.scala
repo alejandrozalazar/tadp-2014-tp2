@@ -1,8 +1,8 @@
 package domain
 
-abstract class TipoEnvio
+abstract class TipoEnvio(val costo: Double)
 
-case object Normal extends TipoEnvio
-case object Urgente extends TipoEnvio
-case object NecesitaRefrigeracion extends TipoEnvio
-case object Fragil extends TipoEnvio
+case object Normal extends TipoEnvio(10)
+case object Urgente extends TipoEnvio(20)
+case object Fragil extends TipoEnvio(18)
+case object NecesitaRefrigeracion extends TipoEnvio(70)

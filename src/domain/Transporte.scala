@@ -70,4 +70,10 @@ abstract class Transporte() {
     puedeRealizarEnvio(envio)
     enviosAsignados = enviosAsignados + envio
   }
+  
+  def costoEnvio() = {
+    enviosAsignados.foldLeft(0.toDouble) { (costoTotal, envio) =>
+	    costoTotal + envio.costo
+	  }
+  }
 }
