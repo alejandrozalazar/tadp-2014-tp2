@@ -13,4 +13,8 @@ class Envio(val sucursalOrigen: Sucursal, val sucursalDestino: Sucursal, val vol
   def costo = {
     tipoEnvio.costo
   }
+  
+  def precio = {
+    tipoEnvio.precio 
+  }
 }

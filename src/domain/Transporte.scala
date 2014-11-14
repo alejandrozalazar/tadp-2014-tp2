@@ -119,13 +119,6 @@ abstract class Transporte {
   }
   
   def costoEnvio(): Double = {
-    val costoDist = costoDistancia
-    val costoPaq = costoPaquetes
-    val costoPeaj = costoPeajes
-    val costosEx = costosExtra(costoPaquetes)
-    val costoVol = costoVolumen(costoPaquetes)
-    val costoServicios = costoServiciosExtra
-    val costoInf = costoInfraestructura
     costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra + costoInfraestructura
   }
   
@@ -185,5 +178,10 @@ abstract class Transporte {
     else{
       0
     }
+  }
+  
+  def gananciaEnvio(): Double = {
+    val sumatoriaPrecios = enviosAsignados.foldLeft(0.toDouble) { (costoTotal, envio) => costoTotal + envio.precio} 
+    sumatoriaPrecios - costoEnvio
   }
 }
