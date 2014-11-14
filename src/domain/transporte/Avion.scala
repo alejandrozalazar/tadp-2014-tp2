@@ -44,11 +44,4 @@ class Avion extends Transporte {
     costoDePaquetes*3
   }
   
-  override def costoGPS() = {
-    0.5 * (new CalculadorDistancia().distanciaAereaEntre(origen, destino)) * 2
-  }
-  
-  override def costoVideo() = {
-    3.74 * (new CalculadorDistancia().distanciaAereaEntre(origen, destino)) * 2
-  }
 }

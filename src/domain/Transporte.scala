@@ -149,10 +149,10 @@ abstract class Transporte {
   }
   
   def costoGPS() = {
-    0.5 * (new CalculadorDistancia().distanciaTerrestreEntre(origen, destino)) * 2
+    0.5 * distanciaEntre(origen, destino).value * 2
   }
   
   def costoVideo() = {
-    3.74 * (new CalculadorDistancia().distanciaTerrestreEntre(origen, destino)) * 2
+    3.74 * distanciaEntre(origen, destino).value * 2
   }
 }
