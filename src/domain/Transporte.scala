@@ -164,4 +164,9 @@ abstract class Transporte {
   def costoVideo() = {
     3.74 * distanciaEntre(origen, destino).value * 2
   }
+  
+  def costoInfraestructura(): Double = {
+    if(enviosAsignados.exists(_.naturaleza.equals(SustanciaPeligrosa))) 600
+    else 0
+  }
 }

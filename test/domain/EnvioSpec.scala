@@ -124,6 +124,13 @@ class EnvioSpec extends FlatSpec with Matchers {
     avion.fechaSalida = new Date("12/19/2012")
     avion.costoIdaCentralPasadoEl20(100) should be(0)
   }
+  
+  "Un transporte que llevar sustancias peligrosas" should "salir mas" in {
+    var camion = new Camion
+    camion.infraestructura = SustanciaPeligrosa
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal, SustanciaPeligrosa))
+    camion.costoInfraestructura should be(600)
+  }
 
   "Un cliente" should "poder enviar paquete" in {
     val cliente: Cliente = new Cliente
