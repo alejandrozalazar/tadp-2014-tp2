@@ -119,7 +119,14 @@ abstract class Transporte {
   }
   
   def costoEnvio(): Double = {
-    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra
+    val costoDist = costoDistancia
+    val costoPaq = costoPaquetes
+    val costoPeaj = costoPeajes
+    val costosEx = costosExtra(costoPaquetes)
+    val costoVol = costoVolumen(costoPaquetes)
+    val costoServicios = costoServiciosExtra
+    val costoInf = costoInfraestructura
+    costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra + costoInfraestructura
   }
   
   def costosExtra(costoDePaquetes: Double): Double = {

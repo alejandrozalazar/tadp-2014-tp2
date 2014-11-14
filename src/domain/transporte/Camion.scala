@@ -32,7 +32,7 @@ class Camion extends Transporte {
   }
   
   override def costosExtra(costoDePaquetes: Double) = {
-    this.costoRefrigeracion + this.costoFinDeMes(costoDePaquetes)
+    costoRefrigeracion + costoFinDeMes(costoDePaquetes) + costoSustanciasPeligrosasUrgentes
   }
   
   def costoRefrigeracion = {

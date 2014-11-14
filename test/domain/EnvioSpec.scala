@@ -145,6 +145,27 @@ class EnvioSpec extends FlatSpec with Matchers {
     camion.agregarEnvio(new Envio(Mendoza, Central, 9.m3, Urgente, SustanciaPeligrosa))
     camion.costoSustanciasPeligrosasUrgentes should be(0.6)
   }
+  
+  "Los envios" should "costar lo que corresponde :D" in {
+    val camion = new Camion
+    camion.poseeGPS = true
+    camion.poseeVideo =true
+    camion.infraestructura = SustanciaPeligrosa
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Urgente, SustanciaPeligrosa))
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal, Otro))
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, NecesitaRefrigeracion, Otro))
+    camion.costoEnvio() should be(11577.06666666666666666)
+    
+    
+    val avion = new Avion
+    avion.poseeGPS = true
+    avion.poseeVideo = true
+    avion.infraestructura = Animal
+    avion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Urgente, Animal))
+    avion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal, Otro))
+    avion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Urgente, Otro))
+    avion.costoEnvio should be(509325.48)
+  }
 
 //  "Un cliente" should "poder enviar paquete" in {
 //    val cliente: Cliente = new Cliente
