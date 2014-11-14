@@ -10,6 +10,7 @@ import exceptions.ValidacionException
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import unidadmedida.VolumenM3
+import exceptions.TransporteNoPoseeInfraestructura
 
 class TransporteSpec extends FlatSpec with Matchers {
 
@@ -164,11 +165,22 @@ class TransporteSpec extends FlatSpec with Matchers {
 //en la sucursal esperando para partir y menos los env ́ıos que est ́an viajando hacia la sucursal.
   
   "La sucursal destino" should "poseer espacio fisico para recibir un envio" in {
-    val sucursalOrigen: Sucursal = Central
-    val sucursalDestino: Sucursal = Mendoza
-    val transporte = transporteMock
     intercept[LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible]{
-	  transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 600.m3))      
+	  transporteMock.agregarEnvio(new Envio(Central, Mendoza, 600.m3))      
+    }
+  }
+  
+//  Por otro lado un transporte puede tener la infrastructura para transportar animales, o para transportar sustancia
+//peligrosas. No es posible que tenga ambas instalaciones ya que son incompatibles entre s ́ı. Tambi ́en es v ́alido que
+//un transporte no tenga ninguna de las dos.
+  
+  "Un transporte no" should "llevar cargas de distinta naturaleza" in {
+    var envio = new Envio(Central, Mendoza, 1.m3, Normal, Animal);
+    transporteMock.infraestructura = Animal;
+    transporteMock.agregarEnvio(envio);
+    envio = new Envio(Central, Mendoza, 2.m3, Normal, SustanciaPeligrosa);
+    intercept[TransporteNoPoseeInfraestructura] {
+    	transporteMock.agregarEnvio(envio);
     }
   }
   

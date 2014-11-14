@@ -11,6 +11,7 @@ import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import unidadmedida.Kilometro
 import scala.collection.mutable.HashSet
 import java.util.Date
+import exceptions.TransporteNoPoseeInfraestructura
 
 abstract class Transporte {
 
@@ -19,6 +20,7 @@ abstract class Transporte {
   var poseeVideo:Boolean = false
   var sucursalActual = Central
   var fechaSalida:Date = new Date
+  var infraestructura:Naturaleza = Otro
   
   def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
   
@@ -30,6 +32,11 @@ abstract class Transporte {
     validar(puedeManejarElTipoDeEnvio(envio.tipoEnvio), TransporteNoSoportaElTipoEnvioEspecificado())
     validar(puedeEnviarALaSucursalDestino(envio.sucursalDestino), TransporteNoSeDirigeALaSucursalDeDestinoEspecificada())
     validar(sucursalDestinoTieneSuficienteEspacio(envio.volumen, envio.sucursalDestino), LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible())
+    validar(poseeInfraestructura(envio), TransporteNoPoseeInfraestructura())
+  }
+  
+  def poseeInfraestructura(envio: Envio): Boolean = {
+    infraestructura.equals(envio.naturaleza) || envio.naturaleza.equals(Otro)
   }
 
   

@@ -8,3 +8,4 @@ case class TransporteTieneVolumenInsuficienteParaRealizarElEnvio() extends Valid
 case class TransporteNoSoportaElTipoEnvioEspecificado() extends ValidacionException
 case class TransporteNoSeDirigeALaSucursalDeDestinoEspecificada() extends ValidacionException
 case class LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible() extends ValidacionException
+case class TransporteNoPoseeInfraestructura() extends ValidacionException
