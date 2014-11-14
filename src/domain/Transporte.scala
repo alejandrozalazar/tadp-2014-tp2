@@ -136,13 +136,8 @@ abstract class Transporte {
     0
   }
   
-  def cantidadEnviosDelTipo(tipo:TipoEnvio): Double = {
-    val enviosDelTipo: HashSet[Envio] = new HashSet()
-    for(envio <- this.enviosAsignados ){
-      if (envio.tipoEnvio.equals(tipo))
-      	enviosDelTipo.add(envio)
-	}
-    enviosDelTipo.size
+  def cantidadEnviosDelTipo(tipo:TipoEnvio): Double = {   
+    this.enviosAsignados.filter((envio: Envio) => envio.tipoEnvio.equals(tipo)).size
   }
   
   def costoServiciosExtra(): Double = {
