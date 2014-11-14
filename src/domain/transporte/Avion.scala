@@ -9,6 +9,8 @@ import domain.Sucursal
 import unidadmedida.Kilometro
 import domain.Normal
 import domain.CalculadorDistancia
+import java.util.Calendar
+import domain.Central
 
 class Avion extends Transporte {
 
@@ -26,7 +28,7 @@ class Avion extends Transporte {
   
   
   override def costosExtra(costoDePaquetes: Double): Double = {
-    costoImpuestos(costoDePaquetes)
+    costoImpuestos(costoDePaquetes) + costoIdaCentralPasadoEl20(costoDePaquetes)
   }
   
   def costoImpuestos(costoDePaquetes: Double): Double = {
@@ -38,6 +40,16 @@ class Avion extends Transporte {
       costoDePaquetes * 0.1
     } else return 0
     
+  }
+  
+  def costoIdaCentralPasadoEl20(costo:Double) = {
+    var calendar = Calendar.getInstance();
+    calendar.setTime(fechaSalida);
+    var miDia = calendar.get(Calendar.DAY_OF_MONTH);
+    
+    if(this.destino.equals(Central) && miDia >= 20){
+      costo * -0.2
+    } else 0
   }
   
   override def costoVolumenParticular(costoDePaquetes:Double):Double = {

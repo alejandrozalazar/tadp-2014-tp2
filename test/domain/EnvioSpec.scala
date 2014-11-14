@@ -114,6 +114,16 @@ class EnvioSpec extends FlatSpec with Matchers {
     camion.fechaSalida = new Date("12/01/2012")
     camion.costoFinDeMes(100) should be(0)
   }
+  
+  "Los aviones que salen a casa central despues del 20" should "reducir su costo un veinte por ciento" in {
+    val avion = new Avion
+    val envio = new Envio(Mendoza, Central, 1.m3, Normal)
+    avion.agregarEnvio(envio)
+    avion.fechaSalida = new Date("12/21/2012")
+    avion.costoIdaCentralPasadoEl20(100) should be(-20)
+    avion.fechaSalida = new Date("12/19/2012")
+    avion.costoIdaCentralPasadoEl20(100) should be(0)
+  }
 
   "Un cliente" should "poder enviar paquete" in {
     val cliente: Cliente = new Cliente
