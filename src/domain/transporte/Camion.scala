@@ -14,6 +14,8 @@ import scala.collection.mutable.HashSet
 import domain.Envio
 import domain.Central
 import domain.TipoEnvio
+import java.util.Date
+import java.util.Calendar
 
 class Camion extends Transporte {
   
@@ -37,7 +39,18 @@ class Camion extends Transporte {
   }
   
   def costoFinDeMes(costo:Double) = {
-    if(this.destino.equals(Central) /*&& el temita de la fecha*/){
+    var calendar = Calendar.getInstance();  
+    calendar.setTime(fechaSalida);
+    var miDia = calendar.get(Calendar.DAY_OF_MONTH);
+    calendar.add(Calendar.MONTH, 1);  
+    calendar.set(Calendar.DAY_OF_MONTH, 1);  
+    calendar.add(Calendar.DATE, -1);
+    var ultimoDia = calendar.get(Calendar.DAY_OF_MONTH);
+    
+    var diferencia = ultimoDia - miDia;
+    var estaEnLaUltimaSemana = (diferencia <= 7);
+    
+    if(this.destino.equals(Central) && estaEnLaUltimaSemana){
       costo * 0.02
     } else 0
   }

@@ -10,6 +10,7 @@ import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import unidadmedida.Kilometro
 import scala.collection.mutable.HashSet
+import java.util.Date
 
 abstract class Transporte {
 
@@ -17,6 +18,7 @@ abstract class Transporte {
   var poseeGPS:Boolean = false
   var poseeVideo:Boolean = false
   var sucursalActual = Central
+  var fechaSalida:Date = new Date
   
   def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
   

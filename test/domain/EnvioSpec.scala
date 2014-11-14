@@ -7,6 +7,7 @@ import unidadmedida.VolumenM3
 import domain.transporte.Camion
 import domain.transporte.Furgoneta
 import domain.transporte.Avion
+import java.util.Date
 
 class EnvioSpec extends FlatSpec with Matchers {
 
@@ -102,6 +103,16 @@ class EnvioSpec extends FlatSpec with Matchers {
     avion.poseeVideo = true
     avion.agregarEnvio(new Envio(Mendoza, BahiaBlanca, 1.m3, Normal))
     avion.costoServiciosExtra should be(8488.48)
+  }
+  
+  "Los camiones que salen a casa central la ultima semana del mes" should "recargo del dos por ciento del costo" in {
+    val camion = new Camion
+    val envio = new Envio(Mendoza, Central, 1.m3, Normal)
+    camion.agregarEnvio(envio)
+    camion.fechaSalida = new Date("12/30/2012")
+    camion.costoFinDeMes(100) should be(2)
+    camion.fechaSalida = new Date("12/01/2012")
+    camion.costoFinDeMes(100) should be(0)
   }
 
   "Un cliente" should "poder enviar paquete" in {
