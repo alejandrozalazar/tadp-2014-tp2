@@ -166,7 +166,17 @@ abstract class Transporte {
   }
   
   def costoInfraestructura(): Double = {
-    if(enviosAsignados.exists(_.naturaleza.equals(SustanciaPeligrosa))) 600
-    else 0
+    if(enviosAsignados.exists(_.naturaleza.equals(SustanciaPeligrosa))){
+      600
+    }
+    else if(enviosAsignados.exists(_.naturaleza.equals(Animal))){
+      var distancia = distanciaEntre(origen, destino).value 
+      if(distancia <= 100) 50
+      else if(distancia <= 200) 86
+      else 137
+    }
+    else{
+      0
+    }
   }
 }

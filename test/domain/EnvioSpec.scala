@@ -125,22 +125,36 @@ class EnvioSpec extends FlatSpec with Matchers {
     avion.costoIdaCentralPasadoEl20(100) should be(0)
   }
   
-  "Un transporte que llevar sustancias peligrosas" should "salir mas" in {
+  "Un transporte que lleva sustancias peligrosas" should "salir mas" in {
     var camion = new Camion
     camion.infraestructura = SustanciaPeligrosa
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal, SustanciaPeligrosa))
     camion.costoInfraestructura should be(600)
   }
-
-  "Un cliente" should "poder enviar paquete" in {
-    val cliente: Cliente = new Cliente
-
-    val sucursalOrigen: Sucursal = Central
-    val sucursalDestino: Sucursal = BahiaBlanca 
-    val volumen: VolumenM3 = 1.m3
-    val tipoEnvio: TipoEnvio = Normal
-
-    cliente.enviarPaquete(sucursalOrigen, sucursalDestino, volumen, tipoEnvio)
+  
+  "Un transporte que lleva animales" should "salir mas" in {
+    var camion = new Camion
+    camion.infraestructura = Animal
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal, Animal))
+    camion.costoInfraestructura should be(50)
   }
+  
+  "Un transporte que lleva sustancias peligrosas urgentes" should "salir mucho mas" in {
+    var camion = new Camion
+    camion.infraestructura = SustanciaPeligrosa
+    camion.agregarEnvio(new Envio(Mendoza, Central, 9.m3, Urgente, SustanciaPeligrosa))
+    camion.costoSustanciasPeligrosasUrgentes should be(0.6)
+  }
+
+//  "Un cliente" should "poder enviar paquete" in {
+//    val cliente: Cliente = new Cliente
+//
+//    val sucursalOrigen: Sucursal = Central
+//    val sucursalDestino: Sucursal = BahiaBlanca 
+//    val volumen: VolumenM3 = 1.m3
+//    val tipoEnvio: TipoEnvio = Normal
+//
+//    cliente.enviarPaquete(sucursalOrigen, sucursalDestino, volumen, tipoEnvio)
+//  }
 
 }

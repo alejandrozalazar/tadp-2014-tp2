@@ -16,6 +16,7 @@ import domain.Central
 import domain.TipoEnvio
 import java.util.Date
 import java.util.Calendar
+import domain.SustanciaPeligrosa
 
 class Camion extends Transporte {
   
@@ -53,6 +54,16 @@ class Camion extends Transporte {
     if(this.destino.equals(Central) && estaEnLaUltimaSemana){
       costo * 0.02
     } else 0
+  }
+  
+  def costoSustanciasPeligrosasUrgentes(): Double = {
+    var peligrosos = enviosAsignados.filter(_.naturaleza.equals(SustanciaPeligrosa))
+    var urgentes = enviosAsignados.filter(_.tipoEnvio.equals(Urgente))
+    if(peligrosos.isEmpty || urgentes.isEmpty) return 0
+    var volumenPaquetes = urgentes.foldLeft(0.toDouble) { (volumen, envio) =>
+        volumen + envio.volumen.value
+      }
+    3 * volumenPaquetes / capacidad.value
   }
   
   override def costoVolumenParticular(costoDePaquetes: Double): Double = {
