@@ -15,10 +15,20 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
-	"El generador de estadisticas" should "mostrarme el costo promedio de los viajes" in {
+	"El generador de estadisticas" should "mostrarme el costo de los envios" in {
 	  var camion = new Camion
 	  camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
 	  camion.realizarViaje
-	  Estadisticas.costoPromedioViajes(camion) should be(10.pesos)
+	  Estadisticas.costoEnviosViajes(camion) should be(10.pesos)
 	}
+  
+	"El generador de estadisticas" should "mostrarme el costo promedio de los envios" in {
+	  var camion = new Camion
+	  camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+	  camion.realizarViaje
+	  camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+	  camion.realizarViaje
+	  Estadisticas.costoPromedioViajes(camion) should be(10039.pesos)
+	}
+
 }

@@ -19,7 +19,7 @@ abstract class Transporte {
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
-  protected var viajeAsignado: Viaje = new Viaje(Central, Mendoza, this)
+  var viajeAsignado: Viaje = new Viaje(Central, Mendoza, this)
   var poseeGPS: Boolean = false
   var poseeVideo: Boolean = false
   var infraestructura: Naturaleza = Otro
