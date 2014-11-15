@@ -109,9 +109,9 @@ class EnvioSpec extends FlatSpec with Matchers {
     val camion = new Camion
     val envio = new Envio(Mendoza, Central, 1.m3, Normal)
     camion.agregarEnvio(envio)
-    camion.fechaSalida = new Date("12/30/2012")
+    camion.setFechaSalida(new Date("12/30/2012"))
     camion.costoFinDeMes(100.pesos) should be(2.pesos)
-    camion.fechaSalida = new Date("12/01/2012")
+    camion.setFechaSalida(new Date("12/01/2012"))
     camion.costoFinDeMes(100.pesos) should be(0.pesos)
   }
   
@@ -119,9 +119,9 @@ class EnvioSpec extends FlatSpec with Matchers {
     val avion = new Avion
     val envio = new Envio(Mendoza, Central, 1.m3, Normal)
     avion.agregarEnvio(envio)
-    avion.fechaSalida = new Date("12/21/2012")
+    avion.setFechaSalida(new Date("12/21/2012"))
     avion.costoIdaCentralPasadoEl20(100.pesos) should be(20.pesos)
-    avion.fechaSalida = new Date("12/19/2012")
+    avion.setFechaSalida(new Date("12/19/2012"))
     avion.costoIdaCentralPasadoEl20(100.pesos) should be(0.pesos)
   }
   

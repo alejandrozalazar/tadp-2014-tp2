@@ -19,12 +19,23 @@ abstract class Transporte {
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
-  protected var enviosAsignados: Set[Envio] = Set()
+  protected var viajeAsignado: Viaje = new Viaje(Central, Mendoza, this)
   var poseeGPS: Boolean = false
   var poseeVideo: Boolean = false
-  var sucursalActual = Central
-  var fechaSalida: Date = new Date
   var infraestructura: Naturaleza = Otro
+
+  def enviosAsignados() = {
+    viajeAsignado.envios
+  }
+  def fechaSalida() = {
+    viajeAsignado.fechaSalida
+  }
+  def sucursalActual() = {
+    viajeAsignado.sucursalOrigen
+  }
+  def setFechaSalida(fecha: Date) = {
+    viajeAsignado.fechaSalida = fecha
+  }
 
   def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
 
@@ -42,20 +53,19 @@ abstract class Transporte {
   def poseeInfraestructura(envio: Envio): Boolean = {
     infraestructura.equals(envio.naturaleza) || envio.naturaleza.equals(Otro)
   }
+  
+  def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
+    if (!viajeAsignado.tieneEnvios) {
+      true
+    } else {
+      viajeAsignado.sucursalDestino.equals(sucursalDestino)
+    }
+  }
 
   def sucursalDestinoTieneSuficienteEspacio(volumen: VolumenM3, sucursalDestino: Sucursal): Boolean =
     {
       volumen <= sucursalDestino.espacioDisponibleEnSucursal
     }
-
-  def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
-    if (enviosAsignados.isEmpty) {
-      true
-    } else {
-      enviosAsignados.iterator.next.sucursalDestino.equals(sucursalDestino)
-    }
-
-  }
 
   def puedeManejarElTipoDeEnvio(tipoEnvioAValidar: TipoEnvio): Boolean = {
     tiposEnvioSoportados.contains(tipoEnvioAValidar)
@@ -67,9 +77,7 @@ abstract class Transporte {
     }
 
   def volumenRestante: VolumenM3 = {
-    enviosAsignados.foldLeft(capacidad) { (volumenRestante, envio) =>
-      volumenRestante - envio.volumen
-    }
+    capacidad - viajeAsignado.volumenOcupado
   }
 
   def volumenOcupado: VolumenM3 = {
@@ -91,13 +99,13 @@ abstract class Transporte {
     enviosAsignados.exists(_.naturaleza.equals(naturaleza))
   }
 
-  //  def transportaTipoEnvio(envio: TipoEnvio): Boolean = {
-  //    enviosAsignados.exists(_.tipoEnvio.equals(envio))
-  //  }
-
   def agregarEnvio(envio: Envio): Unit = {
+    if(!viajeAsignado.tieneEnvios){
+      viajeAsignado.sucursalOrigen = envio.sucursalOrigen
+      viajeAsignado.sucursalDestino = envio.sucursalDestino
+    }
     puedeRealizarEnvio(envio)
-    enviosAsignados = enviosAsignados + envio
+    viajeAsignado.agregarEnvio(envio)
   }
 
   def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
@@ -105,17 +113,11 @@ abstract class Transporte {
   }
 
   def origen() = {
-    enviosAsignados.head.sucursalOrigen
+    viajeAsignado.sucursalOrigen
   }
 
   def destino() = {
-    enviosAsignados.head.sucursalDestino
-  }
-
-  def costoPaquetes(): Dinero = {
-    enviosAsignados.foldLeft(0.pesos) { (costoTotal, envio) =>
-      costoTotal + envio.costo
-    }
+    viajeAsignado.sucursalDestino
   }
 
   def costoDistancia(): Dinero = {
@@ -126,6 +128,8 @@ abstract class Transporte {
   def costoPeajes(): Dinero = {
     0.pesos
   }
+  
+  def costoPaquetes() = viajeAsignado.costoPaquetes
 
   def costoEnvio(): Dinero = {
     costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra + costoInfraestructura
