@@ -12,6 +12,7 @@ import unidadmedida.Kilometro
 import scala.collection.mutable.HashSet
 import java.util.Date
 import exceptions.TransporteNoPoseeInfraestructura
+import domain.Naturaleza
 
 abstract class Transporte {
 
@@ -85,7 +86,15 @@ abstract class Transporte {
     }
     resultadoValidacion
   }
-
+  
+  def transportaNaturaleza(naturaleza: Naturaleza): Boolean = {
+    enviosAsignados.exists(_.naturaleza.equals(naturaleza))
+  }
+  
+//  def transportaTipoEnvio(envio: TipoEnvio): Boolean = {
+//    enviosAsignados.exists(_.tipoEnvio.equals(envio))
+//  }
+  
   def agregarEnvio(envio: Envio): Unit = {
     puedeRealizarEnvio(envio)
     enviosAsignados = enviosAsignados + envio

@@ -57,14 +57,15 @@ class Camion extends Transporte {
   }
   
   def costoSustanciasPeligrosasUrgentes(): Double = {
-    var peligrosos = enviosAsignados.filter(_.naturaleza.equals(SustanciaPeligrosa))
-    var urgentes = enviosAsignados.filter(_.tipoEnvio.equals(Urgente))
-    if(peligrosos.isEmpty || urgentes.isEmpty) return 0
-    var volumenPaquetes = urgentes.foldLeft(0.toDouble) { (volumen, envio) =>
-        volumen + envio.volumen.value
-      }
+    if(!transportaNaturaleza(SustanciaPeligrosa)) return 0
+    
+    val foldeado: (Set[Envio] => Double) = _.foldLeft(0.toDouble) { (volumen, envio) => volumen + envio.volumen.value}  
+    val filtrado: (Set[Envio] => Set[Envio]) = _.filter(_.tipoEnvio.equals(Urgente))   
+    var volumenPaquetes = (foldeado compose filtrado)(enviosAsignados)
     3 * volumenPaquetes / capacidad.value
   }
+  
+ 
   
   override def costoVolumenParticular(costoDePaquetes: Double): Double = {
     if(origen.equals(Central) || destino.equals(Central)){
