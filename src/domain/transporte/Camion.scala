@@ -17,6 +17,7 @@ import domain.TipoEnvio
 import java.util.Date
 import java.util.Calendar
 import domain.SustanciaPeligrosa
+import unidadmedida.Dinero
 
 class Camion extends Transporte {
   
@@ -28,18 +29,18 @@ class Camion extends Transporte {
   override def tiposEnvioSoportados = super.tiposEnvioSoportados + NecesitaRefrigeracion
   
   override def costoPeajes() = {
-    new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 12 // TODO money
+    Dinero(new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 12)
   }
   
-  override def costosExtra(costoDePaquetes: Double) = {
+  override def costosExtra(costoDePaquetes: Dinero) = {
     costoRefrigeracion + costoFinDeMes(costoDePaquetes) + costoSustanciasPeligrosasUrgentes
   }
   
   def costoRefrigeracion = {
-	  5 * cantidadEnviosDelTipo(NecesitaRefrigeracion)
+	  Dinero(5 * cantidadEnviosDelTipo(NecesitaRefrigeracion))
   }
   
-  def costoFinDeMes(costo:Double) = {
+  def costoFinDeMes(costo:Dinero) = {
     var calendar = Calendar.getInstance();  
     calendar.setTime(fechaSalida);
     var miDia = calendar.get(Calendar.DAY_OF_MONTH);
@@ -52,24 +53,24 @@ class Camion extends Transporte {
     var estaEnLaUltimaSemana = (diferencia <= 7);
     
     if(this.destino.equals(Central) && estaEnLaUltimaSemana){
-      costo * 0.02
-    } else 0
+      Dinero(costo.value * 0.02)
+    } else Dinero(0)
   }
   
-  def costoSustanciasPeligrosasUrgentes(): Double = {
-    if(!transportaNaturaleza(SustanciaPeligrosa)) return 0
+  def costoSustanciasPeligrosasUrgentes(): Dinero = {
+    if(!transportaNaturaleza(SustanciaPeligrosa)) return Dinero(0)
     
     val foldeado: (Set[Envio] => Double) = _.foldLeft(0.toDouble) { (volumen, envio) => volumen + envio.volumen.value}  
     val filtrado: (Set[Envio] => Set[Envio]) = _.filter(_.tipoEnvio.equals(Urgente))   
     var volumenPaquetes = (foldeado compose filtrado)(enviosAsignados)
-    3 * volumenPaquetes / capacidad.value
+    Dinero(3 * volumenPaquetes / capacidad.value)
   }
   
  
   
-  override def costoVolumenParticular(costoDePaquetes: Double): Double = {
+  override def costoVolumenParticular(costoDePaquetes: Dinero): Dinero = {
     if(origen.equals(Central) || destino.equals(Central)){
-      0
-    } else costoDePaquetes * (1 + volumenOcupado.value/capacidad.value)
+      Dinero(0)
+    } else Dinero(costoDePaquetes.value * (1 + volumenOcupado.value/capacidad.value))
   }
 }

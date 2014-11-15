@@ -11,6 +11,7 @@ import domain.Normal
 import domain.CalculadorDistancia
 import java.util.Calendar
 import domain.Central
+import unidadmedida.Dinero
 
 class Avion extends Transporte {
 
@@ -23,37 +24,37 @@ class Avion extends Transporte {
   }
   
   override def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
-    new Kilometro(new CalculadorDistancia().distanciaAereaEntre(origen, destino))
+    new CalculadorDistancia().distanciaAereaEntre(origen, destino)
   }
   
   
-  override def costosExtra(costoDePaquetes: Double): Double = {
-    costoImpuestos(costoDePaquetes) + costoIdaCentralPasadoEl20(costoDePaquetes)
+  override def costosExtra(costoDePaquetes: Dinero): Dinero = {
+    costoImpuestos(costoDePaquetes) - costoIdaCentralPasadoEl20(costoDePaquetes)
   }
   
-  def costoImpuestos(costoDePaquetes: Double): Double = {
+  def costoImpuestos(costoDePaquetes: Dinero): Dinero = {
     
     val pais_origen =  this.origen.pais
     val pais_destino = this.destino.pais
     
     if(pais_origen != pais_destino){
-      costoDePaquetes * 0.1
-    } else return 0
+      Dinero(costoDePaquetes.value  * 0.1)
+    } else return Dinero(0)
     
   }
   
-  def costoIdaCentralPasadoEl20(costo:Double) = {
+  def costoIdaCentralPasadoEl20(costo:Dinero) = {
     var calendar = Calendar.getInstance();
     calendar.setTime(fechaSalida);
     var miDia = calendar.get(Calendar.DAY_OF_MONTH);
     
     if(this.destino.equals(Central) && miDia >= 20){
-      costo * -0.2
-    } else 0
+      Dinero(costo.value * 0.2)
+    } else Dinero(0)
   }
   
-  override def costoVolumenParticular(costoDePaquetes:Double):Double = {
-    costoDePaquetes*3
+  override def costoVolumenParticular(costoDePaquetes:Dinero):Dinero = {
+    Dinero(costoDePaquetes.value * 3)
   }
   
 }

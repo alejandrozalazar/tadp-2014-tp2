@@ -1,8 +1,10 @@
 package domain
 
-abstract class TipoEnvio(val costo: Double, val precio: Double)  // TODO not a double!
+import unidadmedida.Dinero
 
-case object Normal extends TipoEnvio(10, 80)
-case object Urgente extends TipoEnvio(20, 110)
-case object Fragil extends TipoEnvio(18, 120)
-case object NecesitaRefrigeracion extends TipoEnvio(70, 210)
+abstract class TipoEnvio(val costo: Dinero, val precio: Dinero) 
+
+case object Normal extends TipoEnvio(Dinero(10), Dinero(80))
+case object Urgente extends TipoEnvio(Dinero(20), Dinero(110))
+case object Fragil extends TipoEnvio(Dinero(18), Dinero(120))
+case object NecesitaRefrigeracion extends TipoEnvio(Dinero(70), Dinero(210))
