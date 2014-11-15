@@ -53,12 +53,12 @@ class Camion extends Transporte {
     var estaEnLaUltimaSemana = (diferencia <= 7);
     
     if(this.destino.equals(Central) && estaEnLaUltimaSemana){
-      Dinero(costo.value * 0.02)
-    } else Dinero(0)
+      costo * 0.02
+    } else 0.pesos
   }
   
   def costoSustanciasPeligrosasUrgentes(): Dinero = {
-    if(!transportaNaturaleza(SustanciaPeligrosa)) return Dinero(0)
+    if(!transportaNaturaleza(SustanciaPeligrosa)) return 0.pesos
     
     val foldeado: (Set[Envio] => Double) = _.foldLeft(0.toDouble) { (volumen, envio) => volumen + envio.volumen.value}  
     val filtrado: (Set[Envio] => Set[Envio]) = _.filter(_.tipoEnvio.equals(Urgente))   
@@ -70,7 +70,7 @@ class Camion extends Transporte {
   
   override def costoVolumenParticular(costoDePaquetes: Dinero): Dinero = {
     if(origen.equals(Central) || destino.equals(Central)){
-      Dinero(0)
-    } else Dinero(costoDePaquetes.value * (1 + volumenOcupado.value/capacidad.value))
+      0.pesos
+    } else costoDePaquetes * (1 + volumenOcupado.value/capacidad.value)
   }
 }

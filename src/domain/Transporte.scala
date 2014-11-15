@@ -1,7 +1,6 @@
 package domain
 
 import java.util.Date
-
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import exceptions.TransporteNoPoseeInfraestructura
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
@@ -13,9 +12,13 @@ import unidadmedida.Dinero
 import unidadmedida.Kilometro
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
+import unidadmedida.UnidadesFactory
 
 abstract class Transporte {
 
+  implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
+    new UnidadesFactory(i)
+  
   protected var enviosAsignados: Set[Envio] = Set()
   var poseeGPS: Boolean = false
   var poseeVideo: Boolean = false
@@ -110,7 +113,7 @@ abstract class Transporte {
   }
 
   def costoPaquetes(): Dinero = {
-    enviosAsignados.foldLeft(Dinero(0)) { (costoTotal, envio) =>
+    enviosAsignados.foldLeft(0.pesos) { (costoTotal, envio) =>
       costoTotal + envio.costo
     }
   }
@@ -121,7 +124,7 @@ abstract class Transporte {
   }
 
   def costoPeajes(): Dinero = {
-    Dinero(0)
+    0.pesos
   }
 
   def costoEnvio(): Dinero = {
@@ -129,17 +132,17 @@ abstract class Transporte {
   }
 
   def costosExtra(costoDePaquetes: Dinero): Dinero = {
-    Dinero(0)
+    0.pesos
   }
 
   def costoVolumen(costoDePaquetes: Dinero): Dinero = {
     if (volumenOcupado.value <= capacidad.value * 0.2) {
       this.costoVolumenParticular(costoDePaquetes)
-    } else Dinero(0)
+    } else 0.pesos
   }
 
   def costoVolumenParticular(costoDePaquetes: Dinero): Dinero = {
-    Dinero(0)
+    0.pesos
   }
 
   def cantidadEnviosDelTipo(tipo: TipoEnvio): Double = {
@@ -147,7 +150,7 @@ abstract class Transporte {
   }
 
   def costoServiciosExtra(): Dinero = {
-    var costoExtra = Dinero(0)
+    var costoExtra = 0.pesos
 
     if (poseeGPS) {
       costoExtra += costoGPS
@@ -162,25 +165,25 @@ abstract class Transporte {
     Dinero(0.5 * distanciaEntre(origen, destino).value * 2)
   }
 
-  def costoVideo() = {
+  def costoVideo():Dinero = {
     Dinero(3.74 * distanciaEntre(origen, destino).value * 2)
   }
 
   def costoInfraestructura(): Dinero = {
     if (enviosAsignados.exists(_.naturaleza.equals(SustanciaPeligrosa))) {
-      Dinero(600)
+      600.pesos
     } else if (enviosAsignados.exists(_.naturaleza.equals(Animal))) {
       var distancia = distanciaEntre(origen, destino).value
-      if (distancia <= 100) Dinero(50)
-      else if (distancia <= 200) Dinero(86)
-      else Dinero(137)
+      if (distancia <= 100) 50.pesos
+      else if (distancia <= 200) 86.pesos
+      else 137.pesos
     } else {
-      Dinero(0)
+      0.pesos
     }
   }
 
   def gananciaEnvio(): Dinero = {
-    val sumatoriaPrecios = enviosAsignados.foldLeft(Dinero(0)) { (costoTotal, envio) => costoTotal + envio.precio }
+    val sumatoriaPrecios = enviosAsignados.foldLeft(0.pesos) { (costoTotal, envio) => costoTotal + envio.precio }
     sumatoriaPrecios - costoEnvio
   }
 }

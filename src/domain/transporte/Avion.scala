@@ -20,7 +20,7 @@ class Avion extends Transporte {
   override def velocidad: VelocidadKMH = new VelocidadKMH(500)
 
   override def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
-    super.puedeEnviarALaSucursalDestino(sucursalDestino) && distanciaEntre(sucursalActual, sucursalDestino) >= new Kilometro(1000)
+    super.puedeEnviarALaSucursalDestino(sucursalDestino) && distanciaEntre(sucursalActual, sucursalDestino) >= 1000.kilometros
   }
   
   override def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
@@ -38,8 +38,8 @@ class Avion extends Transporte {
     val pais_destino = this.destino.pais
     
     if(pais_origen != pais_destino){
-      Dinero(costoDePaquetes.value  * 0.1)
-    } else return Dinero(0)
+      costoDePaquetes  * 0.1
+    } else return 0.pesos
     
   }
   
@@ -49,12 +49,12 @@ class Avion extends Transporte {
     var miDia = calendar.get(Calendar.DAY_OF_MONTH);
     
     if(this.destino.equals(Central) && miDia >= 20){
-      Dinero(costo.value * 0.2)
-    } else Dinero(0)
+      costo * 0.2
+    } else 0.pesos
   }
   
   override def costoVolumenParticular(costoDePaquetes:Dinero):Dinero = {
-    Dinero(costoDePaquetes.value * 3)
+    costoDePaquetes * 3
   }
   
 }

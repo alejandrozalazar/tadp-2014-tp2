@@ -1,15 +1,19 @@
 package domain
 
 import unidadmedida.Kilometro
+import unidadmedida.UnidadesFactory
 
 class CalculadorDistancia {
-	def distanciaTerrestreEntre(sucursal1: Sucursal, sucursal2: Sucursal): Kilometro = {
-	  Kilometro(100)
-	}
-	def distanciaAereaEntre(sucursal1: Sucursal, sucursal2: Sucursal): Kilometro = {
-	  Kilometro(1001)
-	}
-	def cantidadPeajesEntre(sucursal1: Sucursal, sucursal2: Sucursal): Int = {
-	  2
-	}
+  implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
+    new UnidadesFactory(i)
+  
+  def distanciaTerrestreEntre(sucursal1: Sucursal, sucursal2: Sucursal): Kilometro = {
+    100.kilometros
+  }
+  def distanciaAereaEntre(sucursal1: Sucursal, sucursal2: Sucursal): Kilometro = {
+    1001.kilometros
+  }
+  def cantidadPeajesEntre(sucursal1: Sucursal, sucursal2: Sucursal): Int = {
+    2
+  }
 }

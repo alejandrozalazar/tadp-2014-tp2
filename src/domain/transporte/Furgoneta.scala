@@ -20,7 +20,7 @@ class Furgoneta extends Transporte {
 
   override def costoVolumenParticular(costoDePaquetes: Dinero): Dinero = {
     if(cantidadEnviosDelTipo(Urgente) < 3){
-      Dinero(costoDePaquetes.value * 2)
-    } else Dinero(0)
+      costoDePaquetes * 2
+    } else 0.pesos
   }
 }
