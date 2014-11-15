@@ -10,6 +10,10 @@ import unidadmedida.VolumenM3
 import unidadmedida.UnidadesFactory
 
 class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var transporte: Transporte = null, var fechaSalida: Date = new Date) {
+  
+  implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
+    new UnidadesFactory(i)
+  
 	var envios: Set[Envio] = Set()
 	
 	def tieneEnvios = !envios.isEmpty
@@ -19,13 +23,13 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
 	}
 	
     def costoPaquetes(): Dinero = {
-      envios.foldLeft(Dinero(0)) { (costoTotal, envio) =>
+      envios.foldLeft(0.pesos) { (costoTotal, envio) =>
         costoTotal + envio.costo
       }
     }
 	
 	def volumenOcupado() = {
-	  envios.foldLeft(VolumenM3(0)) { (volumen, envio) =>
+	  envios.foldLeft(0.m3) { (volumen, envio) =>
 	  	volumen + envio.volumen
 	  }
 	}

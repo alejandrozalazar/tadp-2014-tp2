@@ -190,4 +190,9 @@ abstract class Transporte {
     val sumatoriaPrecios = enviosAsignados.foldLeft(0.pesos) { (costoTotal, envio) => costoTotal + envio.precio }
     sumatoriaPrecios - costoEnvio
   }
+  
+  def realizarViaje() = {
+    Estadisticas.agregarViajeRealizado(viajeAsignado)
+    viajeAsignado = new Viaje(Central, Mendoza, this)
+  }
 }
