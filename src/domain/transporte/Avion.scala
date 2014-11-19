@@ -6,15 +6,40 @@ import unidadmedida.CostoPorKM
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
 import domain.Sucursal
+import domain.Normal
+import domain.NecesitaRefrigeracion
+import domain.Urgente
+import domain.Fragil
+import domain.TipoEnvio
 import unidadmedida.Kilometro
 import domain.Normal
 import domain.CalculadorDistancia
 import java.util.Calendar
 import domain.Central
 import unidadmedida.Dinero
+import domain.Envio
+import java.util.Date
 
-class Avion extends Transporte {
 
+case class Avion(override val sucursal:Sucursal, override val envios:List[Envio], override val tiposDeEnviosSoportados:List[TipoEnvio], override val tieneGps:Boolean, override val tieneSeguimientoSatelital: Boolean, override val fechaSalida:Date) 
+			extends Transporte(sucursal, envios, tiposDeEnviosSoportados,tieneGps, tieneSeguimientoSatelital, fechaSalida) {
+  
+  override val capacidad = 200.m3
+  override val velocidad = 500.kmh
+  override val costoPorKilometro = 500.pesos
+  
+  def agregarEnvio(envio:Envio):Avion = {
+    validarEnvio(envio)
+    envios match {
+      case Nil => Avion(sucursal,List(envio),tiposDeEnviosSoportados,tieneGps, tieneSeguimientoSatelital,fechaSalida)
+      case xs => {
+        validarMismaSucursalEnvios(envio)
+        Avion(sucursal,(List(envio)++xs),tiposDeEnviosSoportados,tieneGps, tieneSeguimientoSatelital,fechaSalida)
+      }
+    } 
+  }
+  
+  /*
   override def capacidad = VolumenM3(200)
   override def costoPorKilometro: CostoPorKM = new CostoPorKM(500)
   override def velocidad: VelocidadKMH = new VelocidadKMH(500)
@@ -56,5 +81,6 @@ class Avion extends Transporte {
   override def costoVolumenParticular(costoDePaquetes:Dinero):Dinero = {
     costoDePaquetes * 3
   }
+  */
   
 }

@@ -5,183 +5,90 @@ import org.scalatest.Matchers
 import domain.transporte.Avion
 import domain.transporte.Camion
 import domain.transporte.Furgoneta
+import domain.Sucursal
 import unidadmedida.UnidadesFactory
 import exceptions.ValidacionException
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
+import exceptions.TransporteTieneVolumenInsuficienteParaRealizarElEnvio
+import exceptions.TransporteNoSoportaElTipoEnvioEspecificado
 import unidadmedida.VolumenM3
 import exceptions.TransporteNoPoseeInfraestructura
 
-class TransporteSpec extends FlatSpec with Matchers {
+class TransporteSpec2 extends FlatSpec with Matchers {
 
   implicit def intToUnidadesFactory(i: Int): UnidadesFactory =
     new UnidadesFactory(i)
   
-  case object transporteMock extends Transporte(){
-    override def capacidad = VolumenM3(1000)
-  }
+  //def fixture =
+  //  new {
+  //    val sucursal1 = Sucursal("sucursal1",100.m3,"Argentina)
+  //}
 
-  //4. Transportes
+  "Un Camion" should "tiene una capacidad de 45 m3" in {
+    
+   val camion = Camion(Central,Nil,List(Urgente, Normal, Fragil),false,false,null)
 
-  //Cada sucursal posee una cantidad de transportes. De cada transporte se sabe el volumen de carga que puede
-  //llevar, su costo por kilometro y su velocidad.
-  //Para eso se debe validar:
-
-  //El transporte debe tener suficiente espacio disponible para el volumen del envío en cuestión. Para
-  //volumen disponible se debe restar al volumen total el volumen de los pedidos ya asignados a ese transporte.
-  "Un transporte" should "poder verificar si puede realizar un envio menor a su capacidad" in {
-    val transporte = new Camion
-
-    transporte.puedeTransportarVolumen(40.m3) should be(true)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio mayor a su capacidad" in {
-    val transporte = new Camion
-
-    transporte.puedeTransportarVolumen(150.m3) should be(false)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio mayor a su capacidad si ya tiene 1 carga" in {
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 40.m3))
-
-    transporte.puedeTransportarVolumen(10.m3) should be(false)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio mayor a su capacidad si ya tiene 3 carga" in {
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 10.m3))
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 10.m3))
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 10.m3))
-
-    transporte.puedeTransportarVolumen(20.m3) should be(false)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio igual a su capacidad si ya tiene carga" in {
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 20.m3))
-
-    transporte.puedeTransportarVolumen(25.m3) should be(true)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio igual a su capacidad si ya tiene 2 cargas" in {
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 20.m3))
-    transporte.agregarEnvio(new Envio(Central, BahiaBlanca, 20.m3))
-
-    transporte.puedeTransportarVolumen(5.m3) should be(true)
-  }
-
-  //Las características del transporte deben ser compatibles con las necesidades del envío, es decir,
-  //transporte se debe saber si puede llevar envíos urgentes, frágiles y/o posee refrigeración.
-
-  "Un transporte" should "poder verificar si puede realizar un envio normal" in {
-    val camion = new Camion
-    camion.puedeManejarElTipoDeEnvio(Normal) should be(true)
-
-    val avion = new Avion
-    avion.puedeManejarElTipoDeEnvio(Normal) should be(true)
-
-    val furgoneta = new Furgoneta
-    furgoneta.puedeManejarElTipoDeEnvio(Normal) should be(true)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio que necesita refrigeracion" in {
-    val camion = new Camion
-    camion.puedeManejarElTipoDeEnvio(NecesitaRefrigeracion) should be(true)
-
-    val avion = new Avion
-    avion.puedeManejarElTipoDeEnvio(NecesitaRefrigeracion) should be(false)
-
-    val furgoneta = new Furgoneta
-    furgoneta.puedeManejarElTipoDeEnvio(NecesitaRefrigeracion) should be(false)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio urgente" in {
-    val camion = new Camion
-    camion.puedeManejarElTipoDeEnvio(Urgente) should be(true)
-
-    val avion = new Avion
-    avion.puedeManejarElTipoDeEnvio(Urgente) should be(true)
-
-    val furgoneta = new Furgoneta
-    furgoneta.puedeManejarElTipoDeEnvio(Urgente) should be(true)
-  }
-
-  "Un transporte" should "poder verificar si puede realizar un envio fragil" in {
-    val camion = new Camion
-    camion.puedeManejarElTipoDeEnvio(Fragil) should be(true)
-
-    val avion = new Avion
-    avion.puedeManejarElTipoDeEnvio(Fragil) should be(true)
-
-    val furgoneta = new Furgoneta
-    furgoneta.puedeManejarElTipoDeEnvio(Fragil) should be(true)
-  }
-
-  //Todos los destinos de sus envíos deben tener la misma sucursal destino (es decir, un transporte va a una
-  //sucursal destino). Cuando el camión está vacío puede aceptar pedido para cualquier destino, una vez que se
-  //le asignó el primer envío todos los demás pedidos que se asignen deben ir
-
-  "Un transporte" should "poder contener dos envios hacia la misma sucursal" in {
-
-    val sucursalOrigen: Sucursal = Central
-    val sucursalDestino: Sucursal = BahiaBlanca
-
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 20.m3))
-    transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 20.m3))
-  }
-
-  "Un transporte" should "no contener dos envios hacia distintas sucursales" in {
-
-    val sucursalOrigen: Sucursal = Central
-    val sucursalDestino: Sucursal = Mendoza
-    val sucursalDestino2: Sucursal = BahiaBlanca
-
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 20.m3))
-    intercept[TransporteNoSeDirigeALaSucursalDeDestinoEspecificada] {
-		transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino2, 20.m3))
-	}
+   camion.capacidad	should be(45.m3)
   }
   
-  "Un transporte" should "no contener dos envios hacia distintas sucursales con 2 envios correctos" in {
-
-    val sucursalOrigen: Sucursal = Central
-    val sucursalDestino: Sucursal = Mendoza
-    val sucursalDestino2: Sucursal = BahiaBlanca
-
-    val transporte = new Camion
-    transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 10.m3))
-    transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 10.m3))
-    intercept[TransporteNoSeDirigeALaSucursalDeDestinoEspecificada] {
-		transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino2, 20.m3))
-	}
+  "Un camion" should "aguanta dos envios de 10 m3" in {
+    
+    var camion = Camion(Central,Nil, List(Urgente, Normal, Fragil),false,false,null)
+    
+    val envio = Envio(Rio,10.m3,Urgente,null)
+    
+    camion = camion.agregarEnvio(envio)
+    
+    camion.envios should be(List(envio))
+    
+    camion = camion.agregarEnvio(envio)
+    
+    camion.envios should be(List(envio,envio))
+    
   }
   
-//  La sucursal de destino debe poseer espacio f ́ısico para poder recibir el env ́ıo. De cada sucursal se
-//volumen de su dep ́osito. El espacio disponible ser ́a el volumen total menos el volumen de los env
-//en la sucursal esperando para partir y menos los env ́ıos que est ́an viajando hacia la sucursal.
-  
-  "La sucursal destino" should "poseer espacio fisico para recibir un envio" in {
-    intercept[LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible]{
-	  transporteMock.agregarEnvio(new Envio(Central, Mendoza, 600.m3))      
+   "Un camion" should "no aguanta 2 envios de 30 m3" in {
+    
+    var camion = Camion(Central,Nil,List(Urgente, Normal, Fragil),false,false,null)
+    
+    val envio = Envio(null,30.m3,Urgente,null)
+    
+    camion = camion.agregarEnvio(envio)
+    //camion = camion.agregarEnvio(envio)  
+    
+    intercept[TransporteTieneVolumenInsuficienteParaRealizarElEnvio] {
+    	camion = camion.agregarEnvio(envio) 
     }
+
   }
-  
-//  Por otro lado un transporte puede tener la infrastructura para transportar animales, o para transportar sustancia
-//peligrosas. No es posible que tenga ambas instalaciones ya que son incompatibles entre s ́ı. Tambi ́en es v ́alido que
-//un transporte no tenga ninguna de las dos.
-  
-  "Un transporte no" should "llevar cargas de distinta naturaleza" in {
-    var envio = new Envio(Central, Mendoza, 1.m3, Normal, Animal);
-    transporteMock.infraestructura = Animal;
-    transporteMock.agregarEnvio(envio);
-    envio = new Envio(Central, Mendoza, 2.m3, Normal, SustanciaPeligrosa);
-    intercept[TransporteNoPoseeInfraestructura] {
-    	transporteMock.agregarEnvio(envio);
+   
+   "Un Avion" should "no puede transportar un envio que necesita refrigeracion" in {
+    
+    var avion = Avion(Central,Nil,List(Urgente, Normal, Fragil),false,false,null)
+    
+    val envio = Envio(null,30.m3,NecesitaRefrigeracion,null)
+    
+   
+    intercept[TransporteNoSoportaElTipoEnvioEspecificado] {
+    	avion = avion.agregarEnvio(envio) 
     }
+
   }
   
+   "Un transporte" should "no puede llevar envios de dos sucursales distintas" in {
+    
+    var avion = Avion(Central,Nil,List(Urgente, Normal, Fragil),false,false,null)
+    
+    val envio1 = Envio(Mendoza,30.m3,Normal,null)
+    val envio2 = Envio(Rio,30.m3,Normal,null)
+    
+    avion = avion.agregarEnvio(envio1)
+    
+    intercept[TransporteNoSeDirigeALaSucursalDeDestinoEspecificada] {
+    	avion = avion.agregarEnvio(envio2) 
+    }
+
+  }
+   
 }

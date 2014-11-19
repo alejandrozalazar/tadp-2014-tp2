@@ -10,7 +10,8 @@ import domain.transporte.Avion
 import java.util.Date
 
 class EnvioSpec extends FlatSpec with Matchers {
-
+  
+  /*
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
@@ -197,5 +198,7 @@ class EnvioSpec extends FlatSpec with Matchers {
 //
 //    cliente.enviarPaquete(sucursalOrigen, sucursalDestino, volumen, tipoEnvio)
 //  }
+ *  
+ */
 
 }

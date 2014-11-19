@@ -10,6 +10,7 @@ import domain.NecesitaRefrigeracion
 import domain.Urgente
 import domain.Fragil
 import domain.CalculadorDistancia
+import domain.Sucursal
 import scala.collection.mutable.HashSet
 import domain.Envio
 import domain.Central
@@ -19,8 +20,34 @@ import java.util.Calendar
 import domain.SustanciaPeligrosa
 import unidadmedida.Dinero
 
-class Camion extends Transporte {
+case class Camion(override val sucursal:Sucursal, override val envios:List[Envio], override val tiposDeEnviosSoportados:List[TipoEnvio], override val tieneGps:Boolean, override val tieneSeguimientoSatelital: Boolean, override val fechaSalida:Date) 
+			extends Transporte(sucursal, envios, tiposDeEnviosSoportados,tieneGps, tieneSeguimientoSatelital,fechaSalida) {
   
+  override val capacidad = 45.m3
+  override val velocidad = 60.kmh
+  override val costoPorKilometro = 100.pesos
+  
+  override def enviosSoportados: List[TipoEnvio] = tiposDeEnviosSoportados ++ List(NecesitaRefrigeracion)
+  
+  def agregarEnvio(envio:Envio):Camion = {
+    validarEnvio(envio)
+    envios match {
+      case Nil => {
+        Camion(sucursal,List(envio),tiposDeEnviosSoportados,tieneGps,tieneSeguimientoSatelital,fechaSalida)
+      }
+      case xs => {
+        validarMismaSucursalEnvios(envio)
+        Camion(sucursal,(List(envio)++xs),tiposDeEnviosSoportados,tieneGps,tieneSeguimientoSatelital,fechaSalida)
+      }
+    } 
+  } 
+  
+  override def costoPeajes() = {
+    Dinero(new CalculadorDistancia().cantidadPeajesEntre(sucursal, destino) * 12)
+  }
+   
+  
+  /*
   override def capacidad = VolumenM3(45)
   override def poseeRefrigeracion: Boolean = true
   override def costoPorKilometro: CostoPorKM = new CostoPorKM(100)
@@ -28,9 +55,7 @@ class Camion extends Transporte {
   
   override def tiposEnvioSoportados = super.tiposEnvioSoportados + NecesitaRefrigeracion
   
-  override def costoPeajes() = {
-    Dinero(new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 12)
-  }
+  
   
   override def costosExtra(costoDePaquetes: Dinero) = {
     costoRefrigeracion + costoFinDeMes(costoDePaquetes) + costoSustanciasPeligrosasUrgentes
@@ -73,4 +98,5 @@ class Camion extends Transporte {
       0.pesos
     } else costoDePaquetes * (1 + volumenOcupado.value/capacidad.value)
   }
+  */
 }
