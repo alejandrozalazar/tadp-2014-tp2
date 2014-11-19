@@ -1,5 +1,5 @@
 package unidadmedida
 
-case class VelocidadKMH(val value: Double = 0) {
+class VelocidadKMH(val value: Double = 0) {
 
 }

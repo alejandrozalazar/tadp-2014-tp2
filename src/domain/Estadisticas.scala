@@ -5,7 +5,7 @@ import unidadmedida.Dinero
 import unidadmedida.UnidadesFactory
 
 object Estadisticas {
-  /*
+  
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
@@ -26,5 +26,4 @@ object Estadisticas {
 	  var costoPaquetes = viajesDelTransporte.foldLeft(0.pesos) { (total, viaje) => total + viaje.costo(transporte) }
 	  costoPaquetes / viajesDelTransporte.size
 	}
-	*/
 }

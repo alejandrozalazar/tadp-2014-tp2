@@ -1,5 +1,5 @@
 package unidadmedida
 
-case class CostoPorKM(val value: Double = 0) {
+class CostoPorKM(val value: Double = 0) {
 
 }

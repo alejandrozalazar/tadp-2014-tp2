@@ -12,7 +12,6 @@ import java.util.Date
 
 class EstadisticasSpec extends FlatSpec with Matchers {
   
-  /*
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
@@ -31,7 +30,5 @@ class EstadisticasSpec extends FlatSpec with Matchers {
 	  camion.realizarViaje
 	  Estadisticas.costoPromedioViajes(camion) should be(10039.pesos)
 	}
-	* 
-	*/
 
 }

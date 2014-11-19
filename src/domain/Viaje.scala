@@ -28,14 +28,13 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
       }
     }
     
-    /*
     def costo(transporte: Transporte):Dinero = {
       var viajeDelTransporte = transporte.viajeAsignado
       transporte.viajeAsignado = this
       var ret = transporte.costoEnvio
       transporte.viajeAsignado = viajeDelTransporte
       ret //TODO una negrada barbara TODO FIXME KILL_ME_PLEASE
-    }*/
+    }
 	
 	def volumenOcupado() = {
 	  envios.foldLeft(0.m3) { (volumen, envio) =>
