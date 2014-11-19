@@ -13,6 +13,7 @@ import unidadmedida.Kilometro
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
 import unidadmedida.UnidadesFactory
+import domain.Viaje
 
 abstract class Transporte {
 
@@ -193,6 +194,7 @@ abstract class Transporte {
   
   def realizarViaje() = {
     Estadisticas.agregarViajeRealizado(viajeAsignado)
+    viajeAsignado.costoFacturado = costoEnvio
     viajeAsignado = null //Chequear
   }
   

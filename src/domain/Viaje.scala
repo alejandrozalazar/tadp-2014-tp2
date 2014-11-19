@@ -15,6 +15,7 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
     new UnidadesFactory(i)
   
 	var envios: Set[Envio] = Set()
+	var costoFacturado: Dinero = 0.pesos
 	
 	def tieneEnvios = !envios.isEmpty
 
@@ -26,14 +27,6 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
       envios.foldLeft(0.pesos) { (costoTotal, envio) =>
         costoTotal + envio.costo
       }
-    }
-    
-    def costo(transporte: Transporte):Dinero = {
-      var viajeDelTransporte = transporte.viajeAsignado
-      transporte.viajeAsignado = this
-      var ret = transporte.costoEnvio
-      transporte.viajeAsignado = viajeDelTransporte
-      ret //TODO una negrada barbara TODO FIXME KILL_ME_PLEASE
     }
 	
 	def volumenOcupado() = {

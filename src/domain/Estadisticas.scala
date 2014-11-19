@@ -23,7 +23,7 @@ object Estadisticas {
 	
 	def costoPromedioViajes(transporte: Transporte):Dinero = {
 	  var viajesDelTransporte = viajesRealizados.filter(_.transporte.equals(transporte))
-	  var costoPaquetes = viajesDelTransporte.foldLeft(0.pesos) { (total, viaje) => total + viaje.costo(transporte) }
+	  var costoPaquetes = viajesDelTransporte.foldLeft(0.pesos) { (total, viaje) => total + viaje.costoFacturado }
 	  costoPaquetes / viajesDelTransporte.size
 	}
 }
