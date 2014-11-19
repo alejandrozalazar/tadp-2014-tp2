@@ -193,6 +193,10 @@ abstract class Transporte {
   
   def realizarViaje() = {
     Estadisticas.agregarViajeRealizado(viajeAsignado)
-    viajeAsignado = new Viaje(Central, Mendoza, this)
+    viajeAsignado = null //Chequear
+  }
+  
+  def asignarNuevoViaje(viaje:Viaje) = {
+    viajeAsignado = viaje
   }
 }

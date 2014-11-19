@@ -26,6 +26,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
 	  var camion = new Camion
 	  camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
 	  camion.realizarViaje
+	  camion.asignarNuevoViaje(new Viaje(Central, Mendoza, camion))
 	  camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
 	  camion.realizarViaje
 	  Estadisticas.costoPromedioViajes(camion) should be(10039.pesos)
