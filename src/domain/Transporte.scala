@@ -196,5 +196,6 @@ abstract class Transporte {
     Estadisticas.agregarViajeRealizado(viajeAsignado)
     viajeAsignado.costoFacturado = costoEnvio
     viajeAsignado = new Viaje(Central, Mendoza, this)//Medio feo, hay que inicializarlo si o si
+    viajeAsignado.ganancia = gananciaEnvio
   }
 }

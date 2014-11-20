@@ -15,7 +15,8 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
     new UnidadesFactory(i)
   
 	var envios: Set[Envio] = Set()
-	var costoFacturado: Dinero = 0.pesos
+	var costoFacturado = 0.pesos
+	var ganancia = 0.pesos
 	
 	
 	def tieneEnvios = !envios.isEmpty

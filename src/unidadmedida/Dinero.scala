@@ -17,4 +17,8 @@ case class Dinero(val value: Double = 0) {
   def /(veces: Double): Dinero = {
     Dinero(this.value / veces)
   }
+  
+  def round() = {
+    Dinero(this.value.round)
+  }
 }
