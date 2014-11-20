@@ -17,6 +17,7 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
 	var envios: Set[Envio] = Set()
 	var costoFacturado: Dinero = 0.pesos
 	
+	
 	def tieneEnvios = !envios.isEmpty
 
 	def agregarEnvio(envio: Envio) = {
