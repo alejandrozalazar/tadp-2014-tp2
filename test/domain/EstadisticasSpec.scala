@@ -34,13 +34,22 @@ class EstadisticasSpec extends FlatSpec with Matchers {
 	  Estadisticas.costoEnviosViajes(camion) should be(10.pesos)
 	}
   
-	"El generador de estadisticas" should "mostrarme el costo promedio de los envios" in {
+	"El generador de estadisticas" should "mostrarme el costo promedio de los envios por transporte" in {
 	  var camion = new Camion
 	  camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
 	  camion.realizarViaje
 	  camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
 	  camion.realizarViaje
 	  Estadisticas.costoPromedioViajes(camion) should be(10039.pesos)
+	}
+  
+	"El generador de estadisticas" should "mostrarme el costo promedio de los envios por tipo de envio" in {
+	  var camion = new Camion
+	  camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+	  camion.realizarViaje
+	  camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+	  camion.realizarViaje
+	  Estadisticas.costoPromedioViajes(Normal) should be(10034.pesos)
 	}
 	
 	//	6. Estadísticas

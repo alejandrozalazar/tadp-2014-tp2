@@ -50,6 +50,6 @@ object Estadisticas {
 	}
 	
 	def costoPromedioViajes(tipo:TipoEnvio):Dinero = {
-	  costoPromedio(viajesRealizados.filter(_.tieneEnvios.equals(tipo)))
+	  costoPromedio(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
 	}
 }
