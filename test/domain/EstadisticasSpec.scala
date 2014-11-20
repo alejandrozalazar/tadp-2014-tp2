@@ -42,5 +42,39 @@ class EstadisticasSpec extends FlatSpec with Matchers {
 	  camion.realizarViaje
 	  Estadisticas.costoPromedioViajes(camion) should be(10039.pesos)
 	}
+	
+	//	6. Estadísticas
+	//
+	//El sistema deberá proveer información estadística con base en la totalidad de los envíos realizados históricamente.
+	//
+	//Se desea poder combinar diferentes tipos de estadísticas, para comparar diferentes tipos de información:
+	//
+	//* Comparar las diferentes sucursales entre sí.
+	//* Comparar los tipos de transporte entre sí.
+	//* Comparar los tipos de envíos entre sí.
+	//
+	//Luego se podrán establecer filtros sobre esa información. Los filtros pueden ser por fecha en que salío el transporte
+	//
+	//de la sucursal y/o cualquier valor por el que se puede agrupar. Por ejemplo:
+	//
+	//* Una comparación entre sucursales se puede restringir un sólo tipo de transporte.
+	//* Una comparación entre tipos de transporte se puede restringir por tipo de envío.
+	//* Una comparación entre tipos de envío se puede restringir por un rango de fechas.
+	//
+	//Las comparaciones que se desean poder obtener son:
+	//
+	//* Costo promedio de los viajes.
+	//* Ganancia promedio de los viajes.
+	//* Tiempo promedio de los viajes.
+	//* Cantidad de envíos
+	//* Cantidad de viajes
+	//* Facturación total.
+	//
+	//Algunos ejemplos de estadísticas que se podrían obtener con estas combinaciones:
+	//
+	//* Dada una sucursal la cantidad de viajes según cada tipos de
+	//* La facturación total (en un rango de fechas) para cada tipo de transporte para todo el sistema
+	//* El tiempo (o costo) promedio de cada tipo de transporte.
+	//* La facturacíon total de cada compañía por cada sucursal.
 
 }
