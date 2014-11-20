@@ -42,7 +42,7 @@ class Camion extends Transporte {
   
   def costoFinDeMes(costo:Dinero) = {
     var calendar = Calendar.getInstance();  
-    calendar.setTime(fechaSalida);
+    calendar.set(fechaSalida.get(Calendar.YEAR), fechaSalida.get(Calendar.MONTH), fechaSalida.get(Calendar.DAY_OF_MONTH));
     var miDia = calendar.get(Calendar.DAY_OF_MONTH);
     calendar.add(Calendar.MONTH, 1);  
     calendar.set(Calendar.DAY_OF_MONTH, 1);  

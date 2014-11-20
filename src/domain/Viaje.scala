@@ -8,8 +8,9 @@ import unidadmedida.CostoPorKM
 import unidadmedida.Dinero
 import unidadmedida.VolumenM3
 import unidadmedida.UnidadesFactory
+import java.util.GregorianCalendar
 
-class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var transporte: Transporte = null, var fechaSalida: Date = new Date) {
+class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var transporte: Transporte = null, var fechaSalida: GregorianCalendar = new GregorianCalendar(2014,1,1)) {
   
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)

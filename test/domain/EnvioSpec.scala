@@ -8,6 +8,7 @@ import domain.transporte.Camion
 import domain.transporte.Furgoneta
 import domain.transporte.Avion
 import java.util.Date
+import java.util.GregorianCalendar
 
 class EnvioSpec extends FlatSpec with Matchers {
 
@@ -109,9 +110,9 @@ class EnvioSpec extends FlatSpec with Matchers {
     val camion = new Camion
     val envio = new Envio(Mendoza, Central, 1.m3, Normal)
     camion.agregarEnvio(envio)
-    camion.setFechaSalida(new Date("12/30/2012"))
+    camion.setFechaSalida(new GregorianCalendar(2012,12,30))
     camion.costoFinDeMes(100.pesos) should be(2.pesos)
-    camion.setFechaSalida(new Date("12/01/2012"))
+    camion.setFechaSalida(new GregorianCalendar(2012,12,1))
     camion.costoFinDeMes(100.pesos) should be(0.pesos)
   }
   
@@ -119,9 +120,9 @@ class EnvioSpec extends FlatSpec with Matchers {
     val avion = new Avion
     val envio = new Envio(Mendoza, Central, 1.m3, Normal)
     avion.agregarEnvio(envio)
-    avion.setFechaSalida(new Date("12/21/2012"))
+    avion.setFechaSalida(new GregorianCalendar(2012,12,21))
     avion.costoIdaCentralPasadoEl20(100.pesos) should be(20.pesos)
-    avion.setFechaSalida(new Date("12/19/2012"))
+    avion.setFechaSalida(new GregorianCalendar(2012,12,19))
     avion.costoIdaCentralPasadoEl20(100.pesos) should be(0.pesos)
   }
   

@@ -14,6 +14,7 @@ import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
 import unidadmedida.UnidadesFactory
 import domain.estadisticas.Estadisticas
+import java.util.GregorianCalendar
 
 abstract class Transporte {
 
@@ -34,7 +35,7 @@ abstract class Transporte {
   def sucursalActual() = {
     viajeAsignado.sucursalOrigen
   }
-  def setFechaSalida(fecha: Date) = {
+  def setFechaSalida(fecha: GregorianCalendar) = {
     viajeAsignado.fechaSalida = fecha
   }
 
@@ -133,6 +134,15 @@ abstract class Transporte {
   def costoPaquetes() = viajeAsignado.costoPaquetes
 
   def costoEnvio(): Dinero = {
+    val costoDist = costoDistancia
+    val costoPaq = costoPaquetes
+    val costoPeaj = costoPeajes
+    val costosExt = costosExtra(costoPaquetes)
+    val costoVol = costoVolumen(costoPaquetes)
+    val costoServ = costoServiciosExtra
+    val costoInf = costoInfraestructura
+    
+    
     costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra + costoInfraestructura
   }
 
