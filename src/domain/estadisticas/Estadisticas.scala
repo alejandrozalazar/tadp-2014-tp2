@@ -33,17 +33,23 @@ object Estadisticas {
 	  costoPaquetes / viajesDelTransporte.size
 	}
 	
-	def costoPromedioViajes(transporte: Transporte):Dinero = {
-	  var viajesDelTransporte = viajesRealizados.filter(_.transporte.equals(transporte))
-	  var costoPaquetes = viajesDelTransporte.foldLeft(0.pesos) { (total, viaje) => total + viaje.costoFacturado }
-	  costoPaquetes / viajesDelTransporte.size
+	// costo promedio
+	
+	def costoPromedio(viajes: HashSet[Viaje]):Dinero = {
+	  var costoPaquetes = viajes.foldLeft(0.pesos) { (total, viaje) => total + viaje.costoFacturado }
+	  if(viajes.isEmpty) 0.pesos
+	  else costoPaquetes / viajes.size
 	}
 	
-	def obtenerCostoPromedioViajes(sucursal:Sucursal):Dinero = {
-	  var viajesDeSucursal = viajesRealizados.filter(_.sucursalOrigen.equals(sucursal))
-	  var costoEnvios = viajesDeSucursal.foldLeft(0.pesos) {(total, viaje) => total + viaje.costoFacturado}
-	  if(viajesDeSucursal.size == 0)
-	    0.pesos
-	    else costoEnvios / viajesDeSucursal.size
+	def costoPromedioViajes(transporte: Transporte):Dinero = {
+	  costoPromedio(viajesRealizados.filter(_.transporte.equals(transporte)))
+	}
+	
+	def costoPromedioViajes(sucursal:Sucursal):Dinero = {
+	  costoPromedio(viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)))
+	}
+	
+	def costoPromedioViajes(tipo:TipoEnvio):Dinero = {
+	  costoPromedio(viajesRealizados.filter(_.tieneEnvios.equals(tipo)))
 	}
 }

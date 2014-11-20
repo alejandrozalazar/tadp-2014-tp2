@@ -22,8 +22,8 @@ class EstadisticasSpec extends FlatSpec with Matchers {
 	  camion.realizarViaje
 	  camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
 	  camion.realizarViaje
-	  Estadisticas.obtenerCostoPromedioViajes(Mendoza) should be(10034.pesos)
-	  Estadisticas.obtenerCostoPromedioViajes(Central) should be (0.pesos)
+	  Estadisticas.costoPromedioViajes(Mendoza) should be(10034.pesos)
+	  Estadisticas.costoPromedioViajes(Central) should be (0.pesos)
     }
   
   
