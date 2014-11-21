@@ -16,8 +16,8 @@ class TransporteSpec extends FlatSpec with Matchers {
 
   implicit def intToUnidadesFactory(i: Int): UnidadesFactory =
     new UnidadesFactory(i)
-  
-  case object transporteMock extends Transporte(){
+
+  case object transporteMock extends Transporte() {
     override def capacidad = VolumenM3(1000)
   }
 
@@ -142,10 +142,10 @@ class TransporteSpec extends FlatSpec with Matchers {
     val transporte = new Camion
     transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 20.m3))
     intercept[TransporteNoSeDirigeALaSucursalDeDestinoEspecificada] {
-		transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino2, 20.m3))
-	}
+      transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino2, 20.m3))
+    }
   }
-  
+
   "Un transporte" should "no contener dos envios hacia distintas sucursales con 2 envios correctos" in {
 
     val sucursalOrigen: Sucursal = Central
@@ -156,32 +156,32 @@ class TransporteSpec extends FlatSpec with Matchers {
     transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 10.m3))
     transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino, 10.m3))
     intercept[TransporteNoSeDirigeALaSucursalDeDestinoEspecificada] {
-		transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino2, 20.m3))
-	}
-  }
-  
-//  La sucursal de destino debe poseer espacio f ́ısico para poder recibir el env ́ıo. De cada sucursal se
-//volumen de su dep ́osito. El espacio disponible ser ́a el volumen total menos el volumen de los env
-//en la sucursal esperando para partir y menos los env ́ıos que est ́an viajando hacia la sucursal.
-  
-  "La sucursal destino" should "poseer espacio fisico para recibir un envio" in {
-    intercept[LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible]{
-	  transporteMock.agregarEnvio(new Envio(Central, Mendoza, 600.m3))      
+      transporte.agregarEnvio(new Envio(sucursalOrigen, sucursalDestino2, 20.m3))
     }
   }
-  
-//  Por otro lado un transporte puede tener la infrastructura para transportar animales, o para transportar sustancia
-//peligrosas. No es posible que tenga ambas instalaciones ya que son incompatibles entre s ́ı. Tambi ́en es v ́alido que
-//un transporte no tenga ninguna de las dos.
-  
+
+  //  La sucursal de destino debe poseer espacio f ́ısico para poder recibir el env ́ıo. De cada sucursal se
+  //volumen de su dep ́osito. El espacio disponible ser ́a el volumen total menos el volumen de los env
+  //en la sucursal esperando para partir y menos los env ́ıos que est ́an viajando hacia la sucursal.
+
+  "La sucursal destino" should "poseer espacio fisico para recibir un envio" in {
+    intercept[LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible] {
+      transporteMock.agregarEnvio(new Envio(Central, Mendoza, 600.m3))
+    }
+  }
+
+  //  Por otro lado un transporte puede tener la infrastructura para transportar animales, o para transportar sustancia
+  //peligrosas. No es posible que tenga ambas instalaciones ya que son incompatibles entre s ́ı. Tambi ́en es v ́alido que
+  //un transporte no tenga ninguna de las dos.
+
   "Un transporte no" should "llevar cargas de distinta naturaleza" in {
     var envio = new Envio(Central, Mendoza, 1.m3, Normal, Animal);
     transporteMock.infraestructura = Animal;
     transporteMock.agregarEnvio(envio);
     envio = new Envio(Central, Mendoza, 2.m3, Normal, SustanciaPeligrosa);
     intercept[TransporteNoPoseeInfraestructura] {
-    	transporteMock.agregarEnvio(envio);
+      transporteMock.agregarEnvio(envio);
     }
   }
-  
+
 }

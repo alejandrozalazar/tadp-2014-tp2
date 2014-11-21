@@ -6,7 +6,7 @@ import unidadmedida.UnidadesFactory
 class CalculadorDistancia {
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
-  
+
   def distanciaTerrestreEntre(sucursal1: Sucursal, sucursal2: Sucursal): Kilometro = {
     100.kilometros
   }

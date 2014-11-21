@@ -20,7 +20,7 @@ abstract class Transporte {
 
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
-  
+
   var viajeAsignado: Viaje = new Viaje(Central, Mendoza, this)
   var poseeGPS: Boolean = false
   var poseeVideo: Boolean = false
@@ -55,7 +55,7 @@ abstract class Transporte {
   def poseeInfraestructura(envio: Envio): Boolean = {
     infraestructura.equals(envio.naturaleza) || envio.naturaleza.equals(Otro)
   }
-  
+
   def puedeEnviarALaSucursalDestino(sucursalDestino: Sucursal): Boolean = {
     if (!viajeAsignado.tieneEnvios) {
       true
@@ -102,7 +102,7 @@ abstract class Transporte {
   }
 
   def agregarEnvio(envio: Envio): Unit = {
-    if(!viajeAsignado.tieneEnvios){
+    if (!viajeAsignado.tieneEnvios) {
       viajeAsignado.sucursalOrigen = envio.sucursalOrigen
       viajeAsignado.sucursalDestino = envio.sucursalDestino
     }
@@ -130,7 +130,7 @@ abstract class Transporte {
   def costoPeajes(): Dinero = {
     0.pesos
   }
-  
+
   def costoPaquetes() = viajeAsignado.costoPaquetes
 
   def costoEnvio(): Dinero = {
@@ -141,8 +141,7 @@ abstract class Transporte {
     val costoVol = costoVolumen(costoPaquetes)
     val costoServ = costoServiciosExtra
     val costoInf = costoInfraestructura
-    
-    
+
     costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra + costoInfraestructura
   }
 
@@ -180,7 +179,7 @@ abstract class Transporte {
     Dinero(0.5 * distanciaEntre(origen, destino).value * 2)
   }
 
-  def costoVideo():Dinero = {
+  def costoVideo(): Dinero = {
     Dinero(3.74 * distanciaEntre(origen, destino).value * 2)
   }
 
@@ -201,11 +200,11 @@ abstract class Transporte {
     val sumatoriaPrecios = enviosAsignados.foldLeft(0.pesos) { (costoTotal, envio) => costoTotal + envio.precio }
     sumatoriaPrecios - costoEnvio
   }
-  
+
   def realizarViaje() = {
     Estadisticas.agregarViajeRealizado(viajeAsignado)
     viajeAsignado.costoFacturado = costoEnvio
-    viajeAsignado = new Viaje(Central, Mendoza, this)//Medio feo, hay que inicializarlo si o si
+    viajeAsignado = new Viaje(Central, Mendoza, this) //Medio feo, hay que inicializarlo si o si
     viajeAsignado.ganancia = gananciaEnvio
   }
 }
