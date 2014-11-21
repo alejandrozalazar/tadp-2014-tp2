@@ -103,6 +103,25 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   }
 
   //* Tiempo promedio de los viajes.
+  "El generador de estadisticas" should "proveer el tiempo promedio de viajes" in {
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    val extractedLocalValue = Estadisticas.tiempoPromedioViajesEntre(Mendoza, Central) 
+    extractedLocalValue should be(3.333333333333333.horas)
+  }
+  
+  "El generador de estadisticas" should "proveer el tiempo promedio de viajes incluyendo aereos" in {
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
+    camion.realizarViaje
+    val avion = new Avion
+    avion.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
+    avion.realizarViaje
+    val extractedLocalValue = Estadisticas.tiempoPromedioViajesEntre(Central, Rio) 
+    extractedLocalValue should be(3.6686666666666667.horas)
+  }
+
   //* Cantidad de envíos
   //* Cantidad de viajes
   //* Facturación total.

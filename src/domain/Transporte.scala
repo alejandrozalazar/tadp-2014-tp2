@@ -1,6 +1,8 @@
 package domain
 
-import java.util.Date
+import java.util.GregorianCalendar
+
+import domain.estadisticas.Estadisticas
 import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import exceptions.TransporteNoPoseeInfraestructura
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
@@ -10,16 +12,11 @@ import exceptions.ValidacionException
 import unidadmedida.CostoPorKM
 import unidadmedida.Dinero
 import unidadmedida.Kilometro
+import unidadmedida.UnidadesFactory
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
-import unidadmedida.UnidadesFactory
-import domain.estadisticas.Estadisticas
-import java.util.GregorianCalendar
 
-abstract class Transporte {
-
-  implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
-    new UnidadesFactory(i)
+abstract class Transporte extends CalculadorDistancia{
 
   var viajeAsignado: Viaje = new Viaje(Central, Mendoza, this)
   var poseeGPS: Boolean = false
@@ -111,7 +108,7 @@ abstract class Transporte {
   }
 
   def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
-    new CalculadorDistancia().distanciaTerrestreEntre(origen, destino)
+    distanciaTerrestreEntre(origen, destino)
   }
 
   def origen() = {

@@ -29,7 +29,7 @@ class Camion extends Transporte {
   override def tiposEnvioSoportados = super.tiposEnvioSoportados + NecesitaRefrigeracion
 
   override def costoPeajes() = {
-    Dinero(new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 12)
+    Dinero(cantidadPeajesEntre(origen, destino) * 12)
   }
 
   override def costosExtra(costoDePaquetes: Dinero) = {

@@ -9,6 +9,7 @@ import unidadmedida.Dinero
 import unidadmedida.VolumenM3
 import unidadmedida.UnidadesFactory
 import java.util.GregorianCalendar
+import unidadmedida.Hora
 
 class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var transporte: Transporte = null, var fechaSalida: GregorianCalendar = new GregorianCalendar(2014, 1, 1)) {
 
@@ -35,5 +36,10 @@ class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var tra
     envios.foldLeft(0.m3) { (volumen, envio) =>
       volumen + envio.volumen
     }
+  }
+
+  def duracion: Hora = {
+    val distancia = transporte.distanciaEntre(sucursalOrigen, sucursalDestino) * 2 // ida y vuelta
+    transporte.velocidad.horasParaRecorrer(distancia)
   }
 }

@@ -5,6 +5,7 @@ import unidadmedida.Dinero
 import unidadmedida.UnidadesFactory
 import domain._
 import domain.transporte._
+import unidadmedida.Hora
 
 object Estadisticas {
 
@@ -71,5 +72,13 @@ object Estadisticas {
 
   def gananciaPromedioViajes(tipo: TipoEnvio): Dinero = {
     gananciaPromedio(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
+  }
+
+  def tiempoPromedioViajesEntre(sucursalOrigen: Sucursal, sucursalDestino: Sucursal): Hora = {
+    val viajesRealizadosEntreSucursales = viajesRealizados.filter(_.sucursalOrigen.equals(sucursalOrigen)).filter(_.sucursalDestino.equals(sucursalDestino))
+
+    var tiempoPromedio = viajesRealizadosEntreSucursales.foldLeft(0.horas) { (total, viaje) => total + viaje.duracion }
+    if (viajesRealizadosEntreSucursales.isEmpty) 0.horas
+    else tiempoPromedio / viajesRealizadosEntreSucursales.size
   }
 }

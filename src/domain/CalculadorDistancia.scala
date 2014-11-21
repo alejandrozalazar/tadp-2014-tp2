@@ -1,9 +1,10 @@
 package domain
 
+import scala.reflect.runtime.universe._
 import unidadmedida.Kilometro
 import unidadmedida.UnidadesFactory
 
-class CalculadorDistancia {
+trait CalculadorDistancia {
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
 
@@ -17,3 +18,4 @@ class CalculadorDistancia {
     2
   }
 }
+

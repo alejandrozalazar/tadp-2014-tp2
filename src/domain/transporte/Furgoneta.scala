@@ -15,7 +15,7 @@ class Furgoneta extends Transporte {
   override def velocidad: VelocidadKMH = new VelocidadKMH(80)
 
   override def costoPeajes() = {
-    Dinero(new CalculadorDistancia().cantidadPeajesEntre(origen, destino) * 6)
+    Dinero(cantidadPeajesEntre(origen, destino) * 6)
   }
 
   override def costoVolumenParticular(costoDePaquetes: Dinero): Dinero = {
