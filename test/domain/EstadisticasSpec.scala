@@ -120,7 +120,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     val camion = new Camion
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
-    val extractedLocalValue = Estadisticas.tiempoPromedioViajesEntre(Mendoza, Central) 
+    val filtro = FiltroOrigenDestino(Mendoza, Central)
+    val extractedLocalValue = Estadisticas.tiempoPromedio(filtro) 
     extractedLocalValue.round should be(3.horas)
   }
   
@@ -131,7 +132,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     val avion = new Avion
     avion.agregarEnvio(new Envio(Central, Rio, 1.m3, Normal))
     avion.realizarViaje
-    val extractedLocalValue = Estadisticas.tiempoPromedioViajesEntre(Central, Rio) 
+    val filtro = FiltroOrigenDestino(Central, Rio)
+    val extractedLocalValue = Estadisticas.tiempoPromedio(filtro) 
     extractedLocalValue should be(3.6686666666666667.horas)
   }
 

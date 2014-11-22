@@ -86,13 +86,15 @@ object Estadisticas {
   }
   
   // tiempo promedio
-
-  def tiempoPromedioViajesEntre(sucursalOrigen: Sucursal, sucursalDestino: Sucursal): Hora = {
-    val viajesRealizadosEntreSucursales = viajesRealizados.filter(_.sucursalOrigen.equals(sucursalOrigen)).filter(_.sucursalDestino.equals(sucursalDestino))
-
-    var tiempoPromedio = viajesRealizadosEntreSucursales.foldLeft(0.horas) { (total, viaje) => total + viaje.duracion }
-    if (viajesRealizadosEntreSucursales.isEmpty) 0.horas
-    else tiempoPromedio / viajesRealizadosEntreSucursales.size
+  
+  def tiempoPromedio(viajes: HashSet[Viaje]): Hora = {
+    var tiempoPromedio = viajes.foldLeft(0.horas) { (total, viaje) => total + viaje.duracion }
+    if (viajes.isEmpty) 0.horas
+    else tiempoPromedio / viajes.size
+  }
+  
+  def tiempoPromedio(filtros: Filtro*): Hora = {
+    tiempoPromedio(viajesFiltrados(filtros:_*))
   }
 
   // cantidad de envios

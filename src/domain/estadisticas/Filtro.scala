@@ -34,3 +34,9 @@ case class FiltroFecha(desde: GregorianCalendar, hasta: GregorianCalendar) exten
     viajes.filter{ (viaje) => viaje.fechaSalida.compareTo(desde) >= 0 && viaje.fechaSalida.compareTo(hasta) <= 0 }
   }
 }
+
+case class FiltroOrigenDestino(origen: Sucursal, destino: Sucursal) extends Filtro {
+  def filtrar(viajes: HashSet[Viaje]) = {
+    viajes.filter{ (viaje) => viaje.sucursalOrigen.equals(origen) && viaje.sucursalDestino.equals(destino) }
+  }
+}
