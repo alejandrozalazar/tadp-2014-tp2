@@ -2,7 +2,7 @@ package domain
 
 import unidadmedida.Dinero
 
-abstract class TipoEnvio(val costo: Dinero, val precio: Dinero) 
+abstract class TipoEnvio(val costo: Dinero, val precio: Dinero)
 
 case object Normal extends TipoEnvio(Dinero(10), Dinero(80))
 case object Urgente extends TipoEnvio(Dinero(20), Dinero(110))

@@ -5,7 +5,7 @@ import unidadmedida.VolumenM3
 
 abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: VolumenM3, val pais: String) {
 
-  var transportes: Set[Transporte] = Set()
+  //var transportes: Set[Transporte] = Set()
   var enviosAcumulados: Set[Envio] = Set()
   var enviosLlegandoASucursal: Set[Envio] = Set()
 

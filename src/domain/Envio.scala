@@ -9,13 +9,13 @@ case class Envio(val sucursalDestino: Sucursal, val volumen: VolumenM3, val tipo
   require(sucursalDestino != null, "La sucursal destino es obligatoria")
   require(!sucursalOrigen.equals(sucursalDestino), "Las sucursales origen y destino deben ser distintas")
   require(volumen > VolumenM3(0), "El volumen debe ser mayor a cero")*/
-  
+
   def costo = {
     tipoEnvio.costo
-    
+
   }
-  
+
   def precio = {
-    tipoEnvio.precio 
+    tipoEnvio.precio
   }
 }

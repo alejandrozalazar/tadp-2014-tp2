@@ -4,13 +4,10 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import unidadmedida.UnidadesFactory
 import unidadmedida.VolumenM3
-import domain.transporte.Camion
-import domain.transporte.Furgoneta
-import domain.transporte.Avion
-import java.util.Date
+import domain.Transporte
 
 class EnvioSpec extends FlatSpec with Matchers {
-  
+
   /*
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
