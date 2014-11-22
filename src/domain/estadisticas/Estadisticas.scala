@@ -23,6 +23,11 @@ object Estadisticas {
     suc.add(Rio)
     suc
   }
+  
+  def vaciar = {
+    viajesRealizados = new HashSet()
+    sucursales = new HashSet()
+  }
 
   def agregarViajeRealizado(viaje: Viaje) = {
     viajesRealizados.add(viaje)
@@ -73,6 +78,8 @@ object Estadisticas {
   def gananciaPromedioViajes(tipo: TipoEnvio): Dinero = {
     gananciaPromedio(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
   }
+  
+  // tiempo promedio
 
   def tiempoPromedioViajesEntre(sucursalOrigen: Sucursal, sucursalDestino: Sucursal): Hora = {
     val viajesRealizadosEntreSucursales = viajesRealizados.filter(_.sucursalOrigen.equals(sucursalOrigen)).filter(_.sucursalDestino.equals(sucursalDestino))
@@ -80,5 +87,19 @@ object Estadisticas {
     var tiempoPromedio = viajesRealizadosEntreSucursales.foldLeft(0.horas) { (total, viaje) => total + viaje.duracion }
     if (viajesRealizadosEntreSucursales.isEmpty) 0.horas
     else tiempoPromedio / viajesRealizadosEntreSucursales.size
+  }
+
+  // cantidad de envios
+
+  def enviosRealizados(transporte: Transporte): Int = {
+    viajesRealizados.filter(_.transporte.equals(transporte)).flatMap(_.envios).size
+  }
+
+  def enviosRealizados(sucursal: Sucursal): Int = {
+    viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)).flatMap(_.envios).size
+  }
+
+  def enviosRealizados(tipo: TipoEnvio): Int = {
+    viajesRealizados.flatMap(_.envios).filter(_.tipoEnvio.equals(tipo)).size
   }
 }

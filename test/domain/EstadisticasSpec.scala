@@ -10,11 +10,16 @@ import domain.transporte.Furgoneta
 import domain.transporte.Avion
 import java.util.Date
 import domain.estadisticas.Estadisticas
+import org.scalatest.BeforeAndAfter
 
-class EstadisticasSpec extends FlatSpec with Matchers {
+class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
+  
+  before {
+    Estadisticas.vaciar
+  }
 
   "El generador de estadisticas" should "mostrarme el costo de los envios" in {
     var camion = new Camion
@@ -80,7 +85,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.gananciaPromedioViajes(Normal).round should be(-2228.pesos)
+    Estadisticas.gananciaPromedioViajes(Normal).round should be(0.pesos)
   }
 
   "El generador de estadisticas" should "mostrarme el ganancia promedio de los envios por transporte" in {
@@ -98,8 +103,8 @@ class EstadisticasSpec extends FlatSpec with Matchers {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
-    Estadisticas.gananciaPromedioViajes(Mendoza) should be(-2864.pesos)
-    Estadisticas.gananciaPromedioViajes(Central) should be(-10024.pesos)
+    Estadisticas.gananciaPromedioViajes(Mendoza) should be(-5012.pesos)
+    Estadisticas.gananciaPromedioViajes(Central) should be(0.pesos)
   }
 
   //* Tiempo promedio de los viajes.
@@ -108,7 +113,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
     val extractedLocalValue = Estadisticas.tiempoPromedioViajesEntre(Mendoza, Central) 
-    extractedLocalValue should be(3.333333333333333.horas)
+    extractedLocalValue.round should be(3.horas)
   }
   
   "El generador de estadisticas" should "proveer el tiempo promedio de viajes incluyendo aereos" in {
@@ -123,6 +128,35 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   }
 
   //* Cantidad de envíos
+
+  "El generador de estadisticas" should "mostrarme la cantidad de envios realizados por tipo de envio" in {
+    var camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    Estadisticas.enviosRealizados(Normal) should be(1)
+  }
+
+  "El generador de estadisticas" should "mostrarme la cantidad de envios realizados por transporte" in {
+    var camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    Estadisticas.enviosRealizados(camion) should be(2)
+  }
+
+  "El generador de estadisticas" should "mostrarme la cantidad de envios realizados por sucursal" in {
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    Estadisticas.enviosRealizados(Mendoza) should be(2)
+    Estadisticas.enviosRealizados(Central) should be(0)
+  }
+
   //* Cantidad de viajes
   //* Facturación total.
   //
