@@ -2,6 +2,7 @@ package domain
 
 import scala.collection.mutable.HashSet
 import unidadmedida.Dinero
+import unidadmedida.Hora
 import unidadmedida.UnidadesFactory
 
 object Estadisticas {
@@ -39,15 +40,28 @@ object Estadisticas {
 
   def cantidadEnvios(filtro1: Filtro, filtro2: Filtro): Int = {
     var viajesFiltrados = aplicarFiltros(filtro1,filtro2)
-    viajesFiltrados.flatMap(viaje => viaje.envios).size
+    //viajesFiltrados.flatMap(viaje => viaje.envios).size
+    viajesFiltrados.foldLeft(0){ (acum,viaje) => acum + viaje.envios.size }
 
   }
   
-  def aplicarFiltros(filtro1: Filtro, filtro2: Filtro): HashSet[Viaje] = {
+  def facturacionTotal(filtro1:Filtro, filtro2: Filtro): Dinero = {
+    var viajesFiltrados = aplicarFiltros(filtro1,filtro2)
     
-    var viajesFiltrados = viajesRealizados
-    viajesFiltrados = aplicarFiltro(filtro1,viajesFiltrados)
-    viajesFiltrados = aplicarFiltro(filtro2,viajesFiltrados)
+    viajesFiltrados.foldLeft(0.pesos){ (acum, viaje) => acum + viaje.precioEnvio}
+  }
+  
+  def tiempoPromedio(filtro1:Filtro, filtro2: Filtro): Hora = {
+    var viajesFiltrados = aplicarFiltros(filtro1,filtro2)
+    
+    var duracion = viajesFiltrados.foldLeft(0.hora){ (acum, viaje) => acum + viaje.duracion}
+ 
+    duracion / viajesFiltrados.size
+  }
+  
+  def aplicarFiltros(filtros: Filtro*): HashSet[Viaje] = {
+    
+    var viajesFiltrados = filtros.foldLeft(viajesRealizados){ (viajes,filtro) => aplicarFiltro(filtro,viajes) }
     viajesFiltrados
     
   }

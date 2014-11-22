@@ -6,4 +6,5 @@ class UnidadesFactory(valor: Double) {
   def kilometros = Kilometro(valor)
   def km = Kilometro(valor)
   def kmh = VelocidadKMH(valor)
+  def hora = Hora(valor)
 }

@@ -13,8 +13,10 @@ import unidadmedida.Dinero
 import unidadmedida.Kilometro
 import unidadmedida.VelocidadKMH
 import unidadmedida.VolumenM3
+import unidadmedida.Hora
 import unidadmedida.UnidadesFactory
 import java.util.Calendar
+import scala.math.BigDecimal
 
 case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val envios: List[Envio], val fechaSalida: Date) {
 
@@ -31,6 +33,26 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   }
   
   //-------------------------------------------------
+  
+  def precioEnvio(): Dinero = {
+    val sumatoriaPrecio = envios.foldLeft(0.pesos) { (precioTotal, envio) => precioTotal + envio.precio }
+    sumatoriaPrecio
+  }
+  
+  // CALCULO DEL TIEMPO -------------------------------------------------------------------------------------
+  def duracion():Hora = {
+    val distancia = distanciaEntre(sucursalOrigen, destino) * 2 // ida y vuelta 
+    val tiempo = transporte.velocidad.horasParaRecorrer(distancia) 
+    redondear(tiempo.value).hora
+    
+
+  }
+  
+  def redondear(value:Double):Double = {
+    BigDecimal(value).setScale(2, BigDecimal.RoundingMode.HALF_DOWN ).toDouble
+  }
+  
+  // --------------------------------------------------------------------------------------------------------
   
   // CALCULO DE GANANCIA ------------------------------------------------------------------------------------------------------
   def gananciaEnvio(): Dinero = {
