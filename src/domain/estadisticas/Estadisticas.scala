@@ -72,17 +72,9 @@ object Estadisticas {
   def facturacionTotal(viajes: HashSet[Viaje]): Dinero = {
     viajes.foldLeft(0.pesos) { (total, viaje) => total + viaje.ganancia - viaje.costoFacturado }
   }
-
-  def facturacionTotal(transporte: Transporte): Dinero = {
-    facturacionTotal(viajesRealizados.filter(_.transporte.equals(transporte)))
-  }
-
-  def facturacionTotal(sucursal: Sucursal): Dinero = {
-    facturacionTotal(viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)))
-  }
-
-  def facturacionTotal(tipo: TipoEnvio): Dinero = {
-    facturacionTotal(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
+  
+  def facturacionTotal(filtros: Filtro*): Dinero = {
+    facturacionTotal(viajesFiltrados(filtros:_*))
   }
   
   // tiempo promedio
@@ -108,16 +100,12 @@ object Estadisticas {
   }
 
   // cantidad de viajes realizados
-
-  def viajesRealizados(transporte: Transporte): Int = {
-    viajesRealizados.filter(_.transporte.equals(transporte)).size
+  
+  def viajesRealizados(viajes: HashSet[Viaje]): Int = {
+    viajes.size
   }
-
-  def viajesRealizados(sucursal: Sucursal): Int = {
-    viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)).size
-  }
-
-  def viajesRealizados(tipo: TipoEnvio): Int = {
-    viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))).size
+  
+  def viajesRealizados(filtros: Filtro*): Int = {
+    viajesRealizados(viajesFiltrados(filtros:_*))
   }
 }
