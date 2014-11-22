@@ -57,8 +57,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     val filtroMendoza= FiltroSucursal(Mendoza)
     val filtroCentral= FiltroSucursal(Central)
-    Estadisticas.costoPromedioViajes(filtroMendoza) should be(10034.pesos)
-    Estadisticas.costoPromedioViajes(filtroCentral) should be(0.pesos)
+    Estadisticas.costoPromedio(filtroMendoza) should be(10034.pesos)
+    Estadisticas.costoPromedio(filtroCentral) should be(0.pesos)
   }
 
   "El generador de estadisticas" should "mostrarme el costo promedio de los envios por transporte" in {
@@ -68,7 +68,7 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
     val filtroTransporte = FiltroTransporte(camion)
-    Estadisticas.costoPromedioViajes(filtroTransporte) should be(10039.pesos)
+    Estadisticas.costoPromedio(filtroTransporte) should be(10039.pesos)
   }
 
   "El generador de estadisticas" should "mostrarme el costo promedio de los envios por tipo de envio" in {
@@ -78,7 +78,7 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
     val filtroTipoEnvio = FiltroTipoEnvio(Normal)
-    Estadisticas.costoPromedioViajes(filtroTipoEnvio) should be(10034.pesos)
+    Estadisticas.costoPromedio(filtroTipoEnvio) should be(10034.pesos)
   }
 
   //* Ganancia promedio de los viajes.
@@ -181,7 +181,7 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
     val filtro = FiltroTipoEnvio(Normal)
-    Estadisticas.viajesRealizados(filtro) should be(1)
+    Estadisticas.cantidadViajes(filtro) should be(1)
   }
 
   "El generador de estadisticas" should "mostrarme la cantidad de viajes realizados por transporte" in {
@@ -191,7 +191,7 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
     val filtro = FiltroTransporte(camion)
-    Estadisticas.viajesRealizados(filtro) should be(2)
+    Estadisticas.cantidadViajes(filtro) should be(2)
   }
 
   "El generador de estadisticas" should "mostrarme la cantidad de viajes realizados por sucursal" in {
@@ -202,8 +202,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     val filtroMendoza= FiltroSucursal(Mendoza)
     val filtroCentral= FiltroSucursal(Central)
-    Estadisticas.viajesRealizados(filtroMendoza) should be(2)
-    Estadisticas.viajesRealizados(filtroCentral) should be(0)
+    Estadisticas.cantidadViajes(filtroMendoza) should be(2)
+    Estadisticas.cantidadViajes(filtroCentral) should be(0)
   }
 
   //* Facturacion total
