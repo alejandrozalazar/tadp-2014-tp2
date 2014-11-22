@@ -78,6 +78,24 @@ object Estadisticas {
   def gananciaPromedioViajes(tipo: TipoEnvio): Dinero = {
     gananciaPromedio(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
   }
+
+  // facturacion total
+
+  def facturacionTotal(viajes: HashSet[Viaje]): Dinero = {
+    viajes.foldLeft(0.pesos) { (total, viaje) => total + viaje.ganancia - viaje.costoFacturado }
+  }
+
+  def facturacionTotal(transporte: Transporte): Dinero = {
+    facturacionTotal(viajesRealizados.filter(_.transporte.equals(transporte)))
+  }
+
+  def facturacionTotal(sucursal: Sucursal): Dinero = {
+    facturacionTotal(viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)))
+  }
+
+  def facturacionTotal(tipo: TipoEnvio): Dinero = {
+    facturacionTotal(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
+  }
   
   // tiempo promedio
 

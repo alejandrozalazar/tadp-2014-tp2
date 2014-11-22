@@ -79,7 +79,7 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   //* Ganancia promedio de los viajes.
 
-  "El generador de estadisticas" should "mostrarme el ganancia promedio de los envios por tipo de envio" in {
+  "El generador de estadisticas" should "mostrarme la ganancia promedio de los envios por tipo de envio" in {
     var camion = new Camion
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
@@ -88,7 +88,7 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     Estadisticas.gananciaPromedioViajes(Normal).round should be(0.pesos)
   }
 
-  "El generador de estadisticas" should "mostrarme el ganancia promedio de los envios por transporte" in {
+  "El generador de estadisticas" should "mostrarme la ganancia promedio de los envios por transporte" in {
     var camion = new Camion
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
@@ -187,9 +187,36 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     Estadisticas.viajesRealizados(Central) should be(0)
   }
 
-  //* Cantidad de viajes
-  //* Facturación total.
-  //
+  //* Facturacion total
+
+  "El generador de estadisticas" should "mostrarme la facturacion total por tipo de envio" in {
+    var camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    Estadisticas.facturacionTotal(Normal).round should be(-10034.pesos)
+  }
+
+  "El generador de estadisticas" should "mostrarme la facturacion total por transporte" in {
+    var camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    Estadisticas.facturacionTotal(camion) should be(-30102.pesos)
+  }
+
+  "El generador de estadisticas" should "mostrarme la facturacion total por sucrusal" in {
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    Estadisticas.facturacionTotal(Mendoza) should be(-30092.pesos)
+    Estadisticas.facturacionTotal(Central) should be(0.pesos)
+  }
+
   //Algunos ejemplos de estadísticas que se podrían obtener con estas combinaciones:
   //
   //* Dada una sucursal la cantidad de viajes según cada tipos de transportes
