@@ -48,17 +48,6 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
   //Las comparaciones que se desean poder obtener son:
   //
   //* Costo promedio de los viajes.
-  
-  "El generador de estadisticas" should "comparar sucursales por costo promedio de viajes filtrado por transporte" in {
-    val camion = new Camion
-    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
-    camion.realizarViaje
-    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
-    camion.realizarViaje
-    val filtroSucursal = FiltroSucursal(Mendoza)
-    val filtroTransporte = FiltroTransporte(camion)
-    Estadisticas.costoPromedioViajes(filtroSucursal, filtroTransporte) should be(10034.pesos)
-  }
 
   "El generador de estadisticas" should "comparar sucursales por costo promedio de viajes" in {
     val camion = new Camion
@@ -66,8 +55,10 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
-    Estadisticas.costoPromedioViajes(Mendoza) should be(10034.pesos)
-    Estadisticas.costoPromedioViajes(Central) should be(0.pesos)
+    val filtroMendoza= FiltroSucursal(Mendoza)
+    val filtroCentral= FiltroSucursal(Central)
+    Estadisticas.costoPromedioViajes(filtroMendoza) should be(10034.pesos)
+    Estadisticas.costoPromedioViajes(filtroCentral) should be(0.pesos)
   }
 
   "El generador de estadisticas" should "mostrarme el costo promedio de los envios por transporte" in {
@@ -76,7 +67,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.costoPromedioViajes(camion) should be(10039.pesos)
+    val filtroTransporte = FiltroTransporte(camion)
+    Estadisticas.costoPromedioViajes(filtroTransporte) should be(10039.pesos)
   }
 
   "El generador de estadisticas" should "mostrarme el costo promedio de los envios por tipo de envio" in {
@@ -85,7 +77,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.costoPromedioViajes(Normal) should be(10034.pesos)
+    val filtroTipoEnvio = FiltroTipoEnvio(Normal)
+    Estadisticas.costoPromedioViajes(filtroTipoEnvio) should be(10034.pesos)
   }
 
   //* Ganancia promedio de los viajes.
@@ -96,7 +89,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.gananciaPromedioViajes(Normal).round should be(0.pesos)
+    val filtroTipoEnvio = FiltroTipoEnvio(Normal)
+    Estadisticas.gananciaPromedio(filtroTipoEnvio).round should be(0.pesos)
   }
 
   "El generador de estadisticas" should "mostrarme la ganancia promedio de los envios por transporte" in {
@@ -105,7 +99,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.gananciaPromedioViajes(camion) should be(-5012.pesos)
+    val filtroTransporte = FiltroTransporte(camion)
+    Estadisticas.gananciaPromedio(filtroTransporte) should be(-5012.pesos)
   }
 
   "El generador de estadisticas" should "comparar sucursales por ganancia promedio de viajes" in {
@@ -114,8 +109,10 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
-    Estadisticas.gananciaPromedioViajes(Mendoza) should be(-5012.pesos)
-    Estadisticas.gananciaPromedioViajes(Central) should be(0.pesos)
+    val filtroMendoza= FiltroSucursal(Mendoza)
+    val filtroCentral= FiltroSucursal(Central)
+    Estadisticas.gananciaPromedio(filtroMendoza) should be(-5012.pesos)
+    Estadisticas.gananciaPromedio(filtroCentral) should be(0.pesos)
   }
 
   //* Tiempo promedio de los viajes.

@@ -38,29 +38,21 @@ object Estadisticas {
     var costoPaquetes = viajesDelTransporte.foldLeft(0.pesos) { (total, viaje) => total + viaje.costoPaquetes }
     costoPaquetes / viajesDelTransporte.size
   }
+  
+  def viajesFiltrados(filtros: Filtro*) = {
+    filtros.foldLeft(viajesRealizados){ (viajes, filtro) => filtro.filtrar(viajes) }
+  }
 
   // costo promedio
 
-  def costoPromedio(viajes: HashSet[Viaje]): Dinero = {
+  def costoPromedioViajes(viajes: HashSet[Viaje]): Dinero = {
     var costoPaquetes = viajes.foldLeft(0.pesos) { (total, viaje) => total + viaje.costoFacturado }
     if (viajes.isEmpty) 0.pesos
     else costoPaquetes / viajes.size
   }
-
-  def costoPromedioViajes(transporte: Transporte): Dinero = {
-    costoPromedio(viajesRealizados.filter(_.transporte.equals(transporte)))
-  }
-
-  def costoPromedioViajes(sucursal: Sucursal): Dinero = {
-    costoPromedio(viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)))
-  }
-
-  def costoPromedioViajes(tipo: TipoEnvio): Dinero = {
-    costoPromedio(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
-  }
   
-  def costoPromedioViajes(filtros: Filtro*) = {
-    costoPromedio(filtros.foldLeft(viajesRealizados){ (viajes, filtro) => filtro.filtrar(viajes) })
+  def costoPromedioViajes(filtros: Filtro*): Dinero = {
+    costoPromedioViajes(viajesFiltrados(filtros:_*))
   }
 
   // ganancia promedio
@@ -70,17 +62,9 @@ object Estadisticas {
     if (viajes.isEmpty) 0.pesos
     else gananciaPromedio / viajes.size
   }
-
-  def gananciaPromedioViajes(transporte: Transporte): Dinero = {
-    gananciaPromedio(viajesRealizados.filter(_.transporte.equals(transporte)))
-  }
-
-  def gananciaPromedioViajes(sucursal: Sucursal): Dinero = {
-    gananciaPromedio(viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)))
-  }
-
-  def gananciaPromedioViajes(tipo: TipoEnvio): Dinero = {
-    gananciaPromedio(viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))))
+  
+  def gananciaPromedio(filtros: Filtro*): Dinero = {
+    gananciaPromedio(viajesFiltrados(filtros:_*))
   }
 
   // facturacion total
