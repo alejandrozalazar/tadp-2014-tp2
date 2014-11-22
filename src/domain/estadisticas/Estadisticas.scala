@@ -102,4 +102,18 @@ object Estadisticas {
   def enviosRealizados(tipo: TipoEnvio): Int = {
     viajesRealizados.flatMap(_.envios).filter(_.tipoEnvio.equals(tipo)).size
   }
+
+  // cantidad de viajes realizados
+
+  def viajesRealizados(transporte: Transporte): Int = {
+    viajesRealizados.filter(_.transporte.equals(transporte)).size
+  }
+
+  def viajesRealizados(sucursal: Sucursal): Int = {
+    viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)).size
+  }
+
+  def viajesRealizados(tipo: TipoEnvio): Int = {
+    viajesRealizados.filter(_.envios.exists(_.tipoEnvio.equals(tipo))).size
+  }
 }

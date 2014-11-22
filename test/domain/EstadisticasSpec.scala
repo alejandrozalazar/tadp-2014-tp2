@@ -158,6 +158,36 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
   }
 
   //* Cantidad de viajes
+
+  "El generador de estadisticas" should "mostrarme la cantidad de viajes realizados por tipo de envio" in {
+    var camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    Estadisticas.viajesRealizados(Normal) should be(1)
+  }
+
+  "El generador de estadisticas" should "mostrarme la cantidad de viajes realizados por transporte" in {
+    var camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    Estadisticas.viajesRealizados(camion) should be(2)
+  }
+
+  "El generador de estadisticas" should "mostrarme la cantidad de viajes realizados por sucursal" in {
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    Estadisticas.viajesRealizados(Mendoza) should be(2)
+    Estadisticas.viajesRealizados(Central) should be(0)
+  }
+
+  //* Cantidad de viajes
   //* Facturación total.
   //
   //Algunos ejemplos de estadísticas que se podrían obtener con estas combinaciones:
