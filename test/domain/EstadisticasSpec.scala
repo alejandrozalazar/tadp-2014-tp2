@@ -9,7 +9,7 @@ import domain.transporte.Camion
 import domain.transporte.Furgoneta
 import domain.transporte.Avion
 import java.util.Date
-import domain.estadisticas.Estadisticas
+import domain.estadisticas._
 import org.scalatest.BeforeAndAfter
 
 class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
@@ -48,6 +48,17 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
   //Las comparaciones que se desean poder obtener son:
   //
   //* Costo promedio de los viajes.
+  
+  "El generador de estadisticas" should "comparar sucursales por costo promedio de viajes filtrado por transporte" in {
+    val camion = new Camion
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.realizarViaje
+    camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
+    camion.realizarViaje
+    val filtroSucursal = FiltroSucursal(Mendoza)
+    val filtroTransporte = FiltroTransporte(camion)
+    Estadisticas.costoPromedioViajes(filtroSucursal, filtroTransporte) should be(10034.pesos)
+  }
 
   "El generador de estadisticas" should "comparar sucursales por costo promedio de viajes" in {
     val camion = new Camion
