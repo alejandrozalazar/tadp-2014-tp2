@@ -55,10 +55,10 @@ class TransporteSpec2 extends FlatSpec with Matchers {
 
     var viaje = Viaje(camion, Central, Nil, null)
 
-    val envio = Envio(null, 30.m3, Urgente, null)
+    val envio = Envio(Rio, 20.m3, Urgente, null)
 
     viaje = viaje.agregarEnvio(envio)
-    //camion = camion.agregarEnvio(envio)  
+    viaje = viaje.agregarEnvio(envio)  
 
     intercept[TransporteTieneVolumenInsuficienteParaRealizarElEnvio] {
       viaje = viaje.agregarEnvio(envio)

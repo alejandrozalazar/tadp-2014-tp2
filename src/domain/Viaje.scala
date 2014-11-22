@@ -7,6 +7,7 @@ import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
 import exceptions.TransporteNoSoportaElTipoEnvioEspecificado
 import exceptions.TransporteTieneVolumenInsuficienteParaRealizarElEnvio
 import exceptions.TransporteNoSeDirigeALaSucursalDeDestinoEspecificada
+import exceptions.LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible
 import exceptions.ValidacionException
 import unidadmedida.CostoPorKM
 import unidadmedida.Dinero
@@ -27,6 +28,10 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   def puedeLlevarEnviosFragiles: Boolean = false
   def poseeRefrigeracion: Boolean = false
 
+  def volumen:VolumenM3 = {
+    envios.foldLeft(0.m3) { (volumenTotal, envio) => volumenTotal + envio.volumen }
+  }
+  
   // ENVIAR -----------------------------------------
   def enviar = {
     Estadisticas.agregarViajeRealizado(this)  		
@@ -64,27 +69,33 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   //AGREGAR UN ENVIO ---------------------------------------------------------------------------------------------------------
   def agregarEnvio(envio: Envio): Viaje = {
     validarEnvio(envio)
+    var viaje:Viaje = null
     envios match {
-      case Nil => Viaje(transporte, sucursalOrigen, List(envio), fechaSalida)
+      case Nil => viaje = Viaje(transporte, sucursalOrigen, List(envio), fechaSalida)
       case xs => {
         validarMismaSucursalEnvios(envio)
-        Viaje(transporte, sucursalOrigen: Sucursal, List(envio) ++ envios, fechaSalida)
+        viaje = Viaje(transporte, sucursalOrigen: Sucursal, List(envio) ++ envios, fechaSalida)
+        sucursalOrigen.enviosAcumulados.remove(this)
       }
     }
+    sucursalOrigen.enviosAcumulados.add(viaje)
+    viaje
   }
+  
+  
   // ---------------------------------------------------------------------------------------------------------
 
   //CALCULO DE COSTOS -----------------------------------------------------------------------------------------------------
   def costoEnvio(): Dinero = {
     var costo = costoDistancia
     costo = costo + costoPaquetes
-    if (transporte.tieneGps) { costo = costo * (distanciaEntre(sucursalOrigen, destino)).value * 2 * 0.5 }
-    if (transporte.tieneSeguimientoSatelital) { costo = costo * (distanciaEntre(sucursalOrigen, destino)).value * 2 * 3.74 }
+    if (transporte.tieneGps) { costo = costo + ((distanciaEntre(sucursalOrigen, destino)).value * 2 * 0.5).pesos }
+    if (transporte.tieneSeguimientoSatelital) { costo = costo + ((distanciaEntre(sucursalOrigen, destino)).value * 2 * 3.74).pesos }
     if (tieneSustanciasPeligrosas) { costo = costo + 600.pesos }
     if (tieneAnimales) {
-      if (distanciaEntre(sucursalOrigen, destino) < 100.km) { costo + 50.pesos }
-      if (distanciaEntre(sucursalOrigen, destino) >= 100.km && distanciaEntre(sucursalOrigen, destino) <= 200.km) { costo + 86.pesos }
-      if (distanciaEntre(sucursalOrigen, destino) > 200.km) { costo + 137.pesos }
+      if (distanciaEntre(sucursalOrigen, destino) < 100.km) { costo = costo + 50.pesos }
+      if (distanciaEntre(sucursalOrigen, destino) >= 100.km && distanciaEntre(sucursalOrigen, destino) <= 200.km) { costo = costo + 86.pesos }
+      if (distanciaEntre(sucursalOrigen, destino) > 200.km) { costo = costo + 137.pesos }
     }
 
     transporte match {
@@ -92,7 +103,7 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
       case Avion(enviosSoportados, tieneGps, tieneSeguimientoSatelital) => {
         if (envioAOtroPais) { costo = costo * 1.10 } //Costo por distinto pais
         if (volumenRestante.value >= transporte.capacidad.value * 0.8) { costo = costo * 3 }
-        costo
+        if(pasadoElDia20 && destino.equals(Central)){costo = costo*1.2}
       }
 
       case Camion(enviosSoportados, tieneGps, tieneSeguimientoSatelital) => {
@@ -102,7 +113,7 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
           costo = costo * (1 + (transporte.capacidad - volumenRestante).value / transporte.capacidad.value)
         }
         if (tieneSustanciasPeligrosas && tienePaquetesUrgentes) { costo = costo + 3.pesos * (volumenPaquetesUrgentes.value / transporte.capacidad.value) }
-        costo
+        if (esUltimaSemana && destino.equals(Central)) {costo = costo*1.02}
       }
       
       case Furgoneta(enviosSoportados, tieneGps, tieneSeguimientoSatelital) => {
@@ -110,11 +121,11 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
         if ((volumenRestante.value >= transporte.capacidad.value * 0.8) && tieneAlMenosTresPaquetesUrgentes) {
           costo = costo * 2
         }
-        costo
 
       }
+       
     }
-    //costoDistancia + costoPaquetes + costoPeajes + costosExtra(costoPaquetes) + costoVolumen(costoPaquetes) + costoServiciosExtra + costoInfraestructura
+    redondear(costo.value).pesos
   }
   def costoDistancia(): Dinero = {
     val distancia = distanciaEntre(sucursalOrigen, destino)
@@ -171,7 +182,7 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
     envios.count(envio => envio.tipoEnvio.equals(Urgente)) < 3
   }
 
-  def costoFinDeMes(costo: Dinero) = {
+  def esUltimaSemana():Boolean = {
     var calendar = Calendar.getInstance();
     calendar.setTime(fechaSalida);
     var miDia = calendar.get(Calendar.DAY_OF_MONTH);
@@ -179,13 +190,18 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
     calendar.set(Calendar.DAY_OF_MONTH, 1);
     calendar.add(Calendar.DATE, -1);
     var ultimoDia = calendar.get(Calendar.DAY_OF_MONTH);
-
     var diferencia = ultimoDia - miDia;
-    var estaEnLaUltimaSemana = (diferencia <= 7);
+    diferencia <= 7;
+  }
+  
+  def pasadoElDia20():Boolean = {
+     var calendar = Calendar.getInstance();
+     calendar.setTime(fechaSalida);
+     //calendar.set(fechaSalida.get(Calendar.YEAR), fechaSalida.get(Calendar.MONTH), fechaSalida.get(Calendar.DAY_OF_MONTH)); 
+     var dia = calendar.get(Calendar.DAY_OF_MONTH)
 
-    if (this.destino.equals(Central) && estaEnLaUltimaSemana) {
-      costo * 0.02
-    } else 0.pesos
+     this.destino.equals(Central) && dia >= 20 
+
   }
 
   //-----------------------------------------------------------------------------------------------------------------------
@@ -194,6 +210,7 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   def validarEnvio(envio: Envio) = {
     validar(puedeTransportarVolumen(envio.volumen), TransporteTieneVolumenInsuficienteParaRealizarElEnvio())
     validar(puedeManejarElTipoDeEnvio(envio.tipoEnvio), TransporteNoSoportaElTipoEnvioEspecificado())
+    validar(sucursalDestinoTieneSuficienteEspacio(envio.volumen, envio.sucursalDestino), LaSucursalDeDestinoNoTieneSuficienteEspacioDisponible())
   }
 
   def validarMismaSucursalEnvios(envio: Envio) = {
@@ -204,6 +221,12 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
     {
       volumen <= (volumenRestante)
     }
+  
+  def sucursalDestinoTieneSuficienteEspacio(volumen: VolumenM3, sucursalDestino: Sucursal): Boolean = 
+    { 
+       volumen <= sucursalDestino.espacioDisponibleEnSucursal 
+    } 
+
 
   def volumenRestante: VolumenM3 = {
     transporte.capacidad - envios.map(a => a.volumen).foldLeft(0.m3)((v1, v2) => v1 + v2)
@@ -219,5 +242,7 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   def puedeManejarElTipoDeEnvio(tipoEnvioAValidar: TipoEnvio): Boolean = {
     transporte.enviosSoportados.contains(tipoEnvioAValidar)
   }
+  
+  
   
 }

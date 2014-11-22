@@ -2,13 +2,15 @@ package domain
 
 import unidadmedida.Kilometro
 import unidadmedida.VolumenM3
+import scala.collection.mutable.HashSet
 
 abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: VolumenM3, val pais: String) {
 
   //var transportes: Set[Transporte] = Set()
-  var enviosAcumulados: Set[Envio] = Set()
-  var enviosLlegandoASucursal: Set[Envio] = Set()
-
+  var enviosAcumulados: HashSet[Viaje] = HashSet()
+  var enviosLlegandoASucursal: HashSet[Viaje] = HashSet()
+  var enviosRecibidos: HashSet[Viaje] = HashSet()
+  
   def espacioDisponibleEnSucursal: VolumenM3 = {
     val enviosAcumuladosEnSucursal = enviosAcumulados
 
@@ -21,6 +23,7 @@ abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: Volumen
     })
     espacioDisponibleEnSucursal
   }
+
 }
 
 case object Central extends Sucursal(nombre = "Central", volumenDepositoSucursal = VolumenM3(1000), pais = "Argentina")
