@@ -34,10 +34,32 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   
   // ENVIAR -----------------------------------------
   def enviar = {
+    sucursalOrigen.quitarTransporte(transporte)
+    quitarViajeEsperandoPartir
+    agregarViajeLlegando
+    
     Estadisticas.agregarViajeRealizado(this)  		
-  }
+  }  
   
+  def agregarViajeLlegando() {
+    destino.viajesLlegando = destino.viajesLlegando ++ List(this)
+  }
   //-------------------------------------------------
+  
+  // LLEGAR A LA SUCURSAL -----------------------------------------
+  def llegarADestino = {
+    quitarViajesLlegando
+    destino.enviosRecibidos = destino.enviosRecibidos ++ envios
+  }  
+  
+  def quitarViajesLlegando() {
+    destino.viajesLlegando = destino.viajesLlegando.filter(viajeLista => viajeLista != this) 
+  }
+  //------------------------------------------------
+  
+  def regresarASucursal = {
+    sucursalOrigen.agregarTransporte(transporte)
+  }
   
   def precioEnvio(): Dinero = {
     val sumatoriaPrecio = envios.foldLeft(0.pesos) { (precioTotal, envio) => precioTotal + envio.precio }
@@ -75,13 +97,31 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
       case xs => {
         validarMismaSucursalEnvios(envio)
         viaje = Viaje(transporte, sucursalOrigen: Sucursal, List(envio) ++ envios, fechaSalida)
-        sucursalOrigen.enviosAcumulados.remove(this)
+        quitarViajeEsperandoPartir
       }
     }
-    sucursalOrigen.enviosAcumulados.add(viaje)
+    //sucursalOrigen.quitarTransporte(transporte)
+    agregarViajeEsperandoPartir(viaje)
+    //sucursalOrigen.agregarTransporte(transporte)
     viaje
   }
   
+  def quitarViajeEsperandoPartir() = {
+    sucursalOrigen.viajesEsperandoPartir  =sucursalOrigen.viajesEsperandoPartir.filter(viajeLista => viajeLista != this)
+  }
+  
+  def agregarViajeEsperandoPartir(viaje:Viaje) = {
+    sucursalOrigen.viajesEsperandoPartir = sucursalOrigen.viajesEsperandoPartir ++ List(viaje)
+    
+  }
+  
+  //def quitarTransporte() = {
+  //  sucursalOrigen.transportes  = sucursalOrigen.transportes.filter(transporteLista => transporteLista != transporte)
+  //}
+  
+  //def agregarTransporte() = {
+  //  sucursalOrigen.transportes = sucursalOrigen.transportes ++ List(transporte)
+  //}
   
   // ---------------------------------------------------------------------------------------------------------
 

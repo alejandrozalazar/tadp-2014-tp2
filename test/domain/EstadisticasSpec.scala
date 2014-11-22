@@ -16,6 +16,25 @@ class EstadisticasSpec extends FlatSpec with Matchers {
     implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
     
+  def inicializarSucursales() = {
+	  Central.viajesEsperandoPartir = List()
+	  Central.viajesLlegando  = List()
+	  Central.enviosRecibidos  = List()
+	  
+	  Rio.viajesEsperandoPartir = List()
+	  Rio.viajesLlegando  = List()
+	  Rio.enviosRecibidos  = List()
+	  
+	  Mendoza.viajesEsperandoPartir = List()
+	  Mendoza.viajesLlegando  = List()
+	  Mendoza.enviosRecibidos  = List()
+	  
+	  BahiaBlanca.viajesEsperandoPartir = List()
+	  BahiaBlanca.viajesLlegando  = List()
+	  BahiaBlanca.enviosRecibidos  = List()
+	  
+  }
+    
   def fixture1 =
     new {
       
@@ -77,6 +96,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
 
   "Costo promedio por sucursal" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     Estadisticas.costoPromedio(FiltroSucursal(Mendoza), null) should be(10044.pesos) 
@@ -85,13 +105,16 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Costo promedio por sucursal y por transporte" should " " in {
     
+    inicializarSucursales
     val f = fixture1
+    
     val avion = Avion(List(Normal), true, false)
     Estadisticas.costoPromedio(FiltroSucursal(Central),FiltroTransporte(avion)) should be(500515.pesos) 
   }
   
   "Ganancia promedio por sucursal" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     Estadisticas.gananciaPromedio(FiltroSucursal(Mendoza), null) should be((-9884).pesos) 
@@ -100,6 +123,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
    "Ganancia promedio por sucursal y por transporte" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     val avion = Avion(List(Normal), true, false)
@@ -108,6 +132,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
    
   "Cantidad de viajes por sucursal" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     Estadisticas.cantidadViajes(FiltroSucursal(Mendoza), null) should be((1)) 
@@ -116,6 +141,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Cantidad de viajes por sucursal y transporte" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     val avion = Avion(List(Normal), true, false)
@@ -124,6 +150,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
    
   "Cantidad de envios por sucursal" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     Estadisticas.cantidadEnvios(FiltroSucursal(Mendoza), null) should be((2)) 
@@ -133,6 +160,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Cantidad de envios por sucursal y transporte" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     val avion = Avion(List(Normal), true, false)
@@ -141,6 +169,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Facturacion total por sucursal" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     Estadisticas.facturacionTotal(FiltroSucursal(Mendoza), null) should be((160.pesos)) 
@@ -149,6 +178,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Facturacion total por sucursal y por transporte" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     val avion = Avion(List(Normal), true, false)
@@ -158,6 +188,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Tiempo promedio por sucursal" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     Estadisticas.tiempoPromedio(FiltroSucursal(Mendoza), null) should be((3.33.hora)) 
@@ -166,6 +197,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Tiempo promedio por sucursal y transporte" should " " in {
     
+    inicializarSucursales
     val f = fixture1
  
     val avion = Avion(List(Normal), true, false)
@@ -175,6 +207,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Cantidad de viajes por transporte" should " " in {
     
+    inicializarSucursales
     val f1 = fixture1
     val f2 = fixture2
     
@@ -187,6 +220,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Cantidad de viajes por transporte y por tipo de envio" should " " in {
     
+    inicializarSucursales
     val f1 = fixture1
     val f2 = fixture2
     
@@ -199,6 +233,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
    "Cantidad de viajes por tipo de envio" should " " in {
     
+    inicializarSucursales
     val f1 = fixture1
     val f2 = fixture2
     
@@ -208,6 +243,7 @@ class EstadisticasSpec extends FlatSpec with Matchers {
   
   "Cantidad de viajes por tipo de envio y rango de fechas" should " " in {
     
+    inicializarSucursales
     val f1 = fixture1
     val f2 = fixture2
     
