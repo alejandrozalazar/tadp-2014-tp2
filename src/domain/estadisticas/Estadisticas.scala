@@ -98,17 +98,13 @@ object Estadisticas {
   }
 
   // cantidad de envios
-
-  def enviosRealizados(transporte: Transporte): Int = {
-    viajesRealizados.filter(_.transporte.equals(transporte)).flatMap(_.envios).size
+  
+  def enviosRealizados(viajes: HashSet[Viaje]): Int = {
+    viajes.flatMap(_.envios).size
   }
-
-  def enviosRealizados(sucursal: Sucursal): Int = {
-    viajesRealizados.filter(_.sucursalOrigen.equals(sucursal)).flatMap(_.envios).size
-  }
-
-  def enviosRealizados(tipo: TipoEnvio): Int = {
-    viajesRealizados.flatMap(_.envios).filter(_.tipoEnvio.equals(tipo)).size
+  
+  def enviosRealizados(filtros: Filtro*): Int = {
+    enviosRealizados(viajesFiltrados(filtros:_*))
   }
 
   // cantidad de viajes realizados

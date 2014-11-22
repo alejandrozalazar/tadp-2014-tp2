@@ -142,10 +142,12 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
   "El generador de estadisticas" should "mostrarme la cantidad de envios realizados por tipo de envio" in {
     var camion = new Camion
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
+    camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Urgente))
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.enviosRealizados(Normal) should be(1)
+    val filtro = FiltroTipoEnvio(Normal)
+    Estadisticas.enviosRealizados(filtro) should be(2)
   }
 
   "El generador de estadisticas" should "mostrarme la cantidad de envios realizados por transporte" in {
@@ -154,7 +156,8 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Central, Mendoza, 1.m3, Urgente))
     camion.realizarViaje
-    Estadisticas.enviosRealizados(camion) should be(2)
+    val filtro = FiltroTransporte(camion)
+    Estadisticas.enviosRealizados(filtro) should be(2)
   }
 
   "El generador de estadisticas" should "mostrarme la cantidad de envios realizados por sucursal" in {
@@ -163,8 +166,10 @@ class EstadisticasSpec extends FlatSpec with Matchers with BeforeAndAfter {
     camion.realizarViaje
     camion.agregarEnvio(new Envio(Mendoza, Central, 1.m3, Normal))
     camion.realizarViaje
-    Estadisticas.enviosRealizados(Mendoza) should be(2)
-    Estadisticas.enviosRealizados(Central) should be(0)
+    val filtroMendoza= FiltroSucursal(Mendoza)
+    val filtroCentral= FiltroSucursal(Central)
+    Estadisticas.enviosRealizados(filtroMendoza) should be(2)
+    Estadisticas.enviosRealizados(filtroCentral) should be(0)
   }
 
   //* Cantidad de viajes
