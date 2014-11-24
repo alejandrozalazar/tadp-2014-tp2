@@ -90,7 +90,7 @@ class CostosSpec extends FlatSpec with Matchers {
     viaje.costoEnvio should be(550572.pesos)
   }
 
-  "Un avion que viaja a Central luego del día 20" should "aumentar su costo un 20%" in {
+  "Un avion que viaja a Central luego del dia 20" should "aumentar su costo un 20%" in {
     var avion = Avion(List(Urgente, Normal, Fragil), false, false)
     var viaje = Viaje(avion, Central, Nil, new Date(2014,1,25))
     val envio1 = Envio(Central, 100.m3, Normal, Otro)
@@ -108,7 +108,7 @@ class CostosSpec extends FlatSpec with Matchers {
     viaje.costoEnvio should be(1651716.pesos)
   }
   
-  "Una furgoneta cargada menos del 20% y no lleva 3 o más paquetes urgentes" should "multiplican su costo por 2" in {
+  "Una furgoneta cargada menos del 20% y no lleva 3 o mas paquetes urgentes" should "multiplican su costo por 2" in {
     var furgoneta = Furgoneta(List(Normal),false,false)
     var viaje = Viaje(furgoneta, Central, Nil, new Date(2014,1,1))
     val envio1 = Envio(Rio, 0.5.m3, Normal, Otro)
