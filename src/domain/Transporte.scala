@@ -33,7 +33,7 @@ abstract class Transporte extends CalculadorDistancia{
     viajeAsignado.sucursalOrigen
   }
   def setFechaSalida(fecha: GregorianCalendar) = {
-    viajeAsignado.fechaSalida = fecha
+    viajeAsignado = viajeAsignado.copy(fechaSalida = fecha)
   }
 
   def tiposEnvioSoportados: Set[TipoEnvio] = Set(Normal, Urgente, Fragil)
@@ -100,11 +100,10 @@ abstract class Transporte extends CalculadorDistancia{
 
   def agregarEnvio(envio: Envio): Unit = {
     if (!viajeAsignado.tieneEnvios) {
-      viajeAsignado.sucursalOrigen = envio.sucursalOrigen
-      viajeAsignado.sucursalDestino = envio.sucursalDestino
+      viajeAsignado= viajeAsignado .copy(sucursalOrigen = envio.sucursalOrigen, sucursalDestino = envio.sucursalDestino)
     }
     puedeRealizarEnvio(envio)
-    viajeAsignado.agregarEnvio(envio)
+    viajeAsignado = viajeAsignado.agregarEnvio(envio)
   }
 
   def distanciaEntre(origen: Sucursal, destino: Sucursal): Kilometro = {
@@ -199,9 +198,11 @@ abstract class Transporte extends CalculadorDistancia{
   }
 
   def realizarViaje() = {
+    //viajeAsignado.costoFacturado = costoEnvio
+    viajeAsignado = viajeAsignado.copy(costoFacturado = costoEnvio)
     Estadisticas.agregarViajeRealizado(viajeAsignado)
-    viajeAsignado.costoFacturado = costoEnvio
     viajeAsignado = new Viaje(Central, Mendoza, this) //Medio feo, hay que inicializarlo si o si
-    viajeAsignado.ganancia = gananciaEnvio
+//    viajeAsignado.ganancia = gananciaEnvio
+    viajeAsignado = viajeAsignado.copy(ganancia = gananciaEnvio)
   }
 }

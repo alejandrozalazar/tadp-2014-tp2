@@ -11,19 +11,15 @@ import unidadmedida.UnidadesFactory
 import java.util.GregorianCalendar
 import unidadmedida.Hora
 
-class Viaje(var sucursalOrigen: Sucursal, var sucursalDestino: Sucursal, var transporte: Transporte = null, var fechaSalida: GregorianCalendar = new GregorianCalendar(2014, 1, 1)) {
+case class Viaje(val sucursalOrigen: Sucursal, val sucursalDestino: Sucursal, val transporte: Transporte = null, val fechaSalida: GregorianCalendar = new GregorianCalendar(2014, 1, 1), val envios: Set[Envio] = Set(), val costoFacturado:Dinero = Dinero(0), val ganancia:Dinero = Dinero(0)) {
 
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
 
-  var envios: Set[Envio] = Set()
-  var costoFacturado = 0.pesos
-  var ganancia = 0.pesos
-
   def tieneEnvios = !envios.isEmpty
 
-  def agregarEnvio(envio: Envio) = {
-    envios = envios + envio
+  def agregarEnvio(envio: Envio):Viaje = {
+    this.copy(envios = this.envios + envio)
   }
 
   def costoPaquetes(): Dinero = {
