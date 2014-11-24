@@ -198,11 +198,9 @@ abstract class Transporte extends CalculadorDistancia{
   }
 
   def realizarViaje() = {
-    //viajeAsignado.costoFacturado = costoEnvio
     viajeAsignado = viajeAsignado.copy(costoFacturado = costoEnvio)
     Estadisticas.agregarViajeRealizado(viajeAsignado)
     viajeAsignado = new Viaje(Central, Mendoza, this) //Medio feo, hay que inicializarlo si o si
-//    viajeAsignado.ganancia = gananciaEnvio
     viajeAsignado = viajeAsignado.copy(ganancia = gananciaEnvio)
   }
 }
