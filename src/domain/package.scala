@@ -1,7 +1,9 @@
 import java.util.GregorianCalendar
-import scala.collection.immutable.HashSet
+import scala.collection.mutable.HashSet
 
 package object domain {
+
+  type filtro = HashSet[Viaje] => HashSet[Viaje]
 
   def FiltroSucursal(sucursal: Sucursal)(
     viajes: HashSet[Viaje]) = {

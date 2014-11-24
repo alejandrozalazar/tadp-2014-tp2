@@ -38,10 +38,6 @@ object Estadisticas {
     var costoPaquetes = viajesDelTransporte.foldLeft(0.pesos) { (total, viaje) => total + viaje.costoPaquetes }
     costoPaquetes / viajesDelTransporte.size
   }
-  
-  def viajesFiltrados(filtros: Filtro*) = {
-    filtros.foldLeft(viajesRealizados){ (viajes, filtro) => filtro.filtrar(viajes) }
-  }
 
   // costo promedio
 
@@ -50,8 +46,8 @@ object Estadisticas {
     if (viajes.isEmpty) 0.pesos
     else costoPaquetes / viajes.size
   }
-  
-  def costoPromedio(filtros: Filtro*): Dinero = (costoPromedioViajes compose viajesFiltrados)(filtros)
+
+  def costoPromedio(f: filtro): Dinero = (costoPromedioViajes compose f)(viajesRealizados)
 
   // ganancia promedio
 
@@ -61,15 +57,15 @@ object Estadisticas {
     else gananciaPromedio / viajes.size
   }
   
-  def gananciaPromedio(filtros: Filtro*): Dinero = (gananciaPromedioViajes compose viajesFiltrados)(filtros)
+  def gananciaPromedio(f: filtro): Dinero = (gananciaPromedioViajes compose f)(viajesRealizados)
 
   // facturacion total
 
   def facturacionTotalViajes:(HashSet[Viaje] => Dinero) = { (viajes) =>
     viajes.foldLeft(0.pesos) { (total, viaje) => total + viaje.ganancia - viaje.costoFacturado }
   }
-  
-  def facturacionTotal(filtros: Filtro*): Dinero = (facturacionTotalViajes compose viajesFiltrados)(filtros)
+
+  def facturacionTotal(f: filtro): Dinero = (facturacionTotalViajes compose f)(viajesRealizados)
   
   // tiempo promedio
   
@@ -78,16 +74,15 @@ object Estadisticas {
     if (viajes.isEmpty) 0.horas
     else tiempoPromedio / viajes.size
   }
-  
-  def tiempoPromedio(filtros: Filtro*): Hora = (tiempoPromedioViajes compose viajesFiltrados)(filtros)
+
+  def tiempoPromedio(f: filtro): Hora = (tiempoPromedioViajes compose f)(viajesRealizados)
 
   // cantidad de envios
-  
-  def enviosRealizados(filtros: Filtro*): Int = viajesFiltrados(filtros:_*).flatMap(_.envios).size
+
+  def enviosRealizados(f: filtro): Int = f(viajesRealizados).flatMap(_.envios).size
 
   // cantidad de viajes realizados
-  
-//  def cantidadViajes(filtros:Filtro*) = (((viaje:HashSet[Viaje]) => viaje.size) compose viajesFiltrados)(filtros)
-  def cantidadViajes(filtros:Filtro*) = viajesFiltrados(filtros:_*).size
+
+  def cantidadViajes(f: filtro): Int = f(viajesRealizados).size
 
 }
