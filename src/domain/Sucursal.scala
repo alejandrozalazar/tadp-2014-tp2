@@ -9,12 +9,14 @@ import scala.collection.mutable.HashMap
 abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: VolumenM3, val pais: String) {
 
   
-  implicit def intToUnidadesFactory(i: Int): UnidadesFactory =
-    new UnidadesFactory(i)
+//  implicit def intToUnidadesFactory(i: Int): UnidadesFactory =
+//    new UnidadesFactory(i)
     
-  implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
+  // detalle: no es INT to ..., además solo necesitan uno de los dos
+  implicit def doubleToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
   
+  // otra parte donde lo puramente funcional se fue al caño :P
   var viajesLlegando: List[Viaje] = List()
   var viajesEsperandoPartir: List[Viaje] = List()
   var enviosRecibidos: List[Envio] = List()
@@ -25,6 +27,7 @@ abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: Volumen
   def espacioDisponibleEnSucursal: VolumenM3 = {
     
    val enviosTotales  = ((viajesLlegando ++ viajesEsperandoPartir).flatMap(viaje => viaje.envios )) ++ enviosRecibidos
+   // NO usar println! quieren verificar los envíos totales hagan tests (si eso es complejo sepárenlo y testeenlo por separado)
    println("Envios totales size = " ++ enviosTotales.size.toString)
    val espacioOcupado = enviosTotales.foldLeft(0.m3){(volumen,envio) => volumen + envio.volumen}
    this.volumenDepositoSucursal - espacioOcupado
@@ -43,6 +46,7 @@ abstract class Sucursal(val nombre: String, var volumenDepositoSucursal: Volumen
   }
 }
 
+// lo mismo que en master
 case object Central extends Sucursal(nombre = "Central", volumenDepositoSucursal = VolumenM3(1000), pais = "Argentina")
 case object BahiaBlanca extends Sucursal(nombre = "BahiaBlanca", volumenDepositoSucursal = VolumenM3(300), pais = "Argentina")
 case object Mendoza extends Sucursal(nombre = "Mendoza", volumenDepositoSucursal = VolumenM3(500), pais = "Argentina")

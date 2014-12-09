@@ -19,6 +19,11 @@ import unidadmedida.UnidadesFactory
 import java.util.Calendar
 import scala.math.BigDecimal
 
+/*
+ * CUIDADO: "Viaje" pasó a ser un god object (anti pattern), tiene muchisimas responsabilidades,
+ *  es super complejo / dificil de mantener ...
+ *  Distribuyan el comportamiento en otros objetos / funciones (single responsibility principle)
+ */
 case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val envios: List[Envio], val fechaSalida: Date) {
 
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
@@ -111,6 +116,8 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   }
   
   def agregarViajeEsperandoPartir(viaje:Viaje) = {
+    // pedir una colección a un objeto y modificarla es un smell fuertísimo, incluso en objetos
+    //   porque están violando el encapsulamiento y no separan las responsabilidades
     sucursalOrigen.viajesEsperandoPartir = sucursalOrigen.viajesEsperandoPartir ++ List(viaje)
     
   }
@@ -125,6 +132,11 @@ case class Viaje(val transporte: Transporte, val sucursalOrigen: Sucursal, val e
   
   // ---------------------------------------------------------------------------------------------------------
 
+  /*
+   * El tener que hacer estos tipos de cartelones para encontrar código es un indicador
+   * de que su objeto tiene mucho comportamiento / muchas responsabilidades
+   */
+  
   //CALCULO DE COSTOS -----------------------------------------------------------------------------------------------------
   def costoEnvio(): Dinero = {
     var costo = costoDistancia

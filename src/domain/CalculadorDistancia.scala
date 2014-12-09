@@ -3,6 +3,7 @@ package domain
 import unidadmedida.Kilometro
 import unidadmedida.UnidadesFactory
 
+// lo mismo que en master
 class CalculadorDistancia {
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
     new UnidadesFactory(i)
