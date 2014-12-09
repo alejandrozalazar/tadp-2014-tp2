@@ -1,5 +1,6 @@
 package unidadmedida
 
+// lo mismo que "Dinero"
 case class Hora(val value: Double = 0) {
 
   def +(hora: Hora): Hora = {

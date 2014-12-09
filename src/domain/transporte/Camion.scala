@@ -22,6 +22,7 @@ import unidadmedida.Dinero
 class Camion extends Transporte {
 
   override def capacidad = VolumenM3(45)
+  // tienen capacidad de refrigeración, pero no todos la tienen (es una de las opciones de "configuración" de un transporte "Camion")
   override def poseeRefrigeracion: Boolean = true
   override def costoPorKilometro: CostoPorKM = new CostoPorKM(100)
   override def velocidad: VelocidadKMH = new VelocidadKMH(60)

@@ -1,5 +1,8 @@
 package unidadmedida
 
+// No termino de entender cual es la ganancia de wrapear el double...
+//   ahora solo pueden usar las operaciones definidas en este tipo
+// (podrían haber usado un type alias si querían dar información de tipo pero sin reimplementarlo)
 case class Dinero(val value: Double = 0) {
 
   def +(dinero: Dinero): Dinero = {

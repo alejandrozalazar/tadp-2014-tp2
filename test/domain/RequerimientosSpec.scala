@@ -5,6 +5,8 @@ import org.scalatest.Matchers
 
 class RequerimientosSpec extends FlatSpec with Matchers {
 
+  // y estos tests?
+  
   //1. Dado un transporte ya cargado, saber cual es el costo del viaje, y la ganancia del mismo.
   "Un transporte cargado" should "contestar costo del viaje y ganancia del mismo" in {
 

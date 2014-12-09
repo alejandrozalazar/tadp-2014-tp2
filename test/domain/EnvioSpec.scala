@@ -147,6 +147,8 @@ class EnvioSpec extends FlatSpec with Matchers {
     camion.costoSustanciasPeligrosasUrgentes should be(0.6.pesos)
   }
 
+  // uno testea casos particulares, no definan test que verifican que algo "funciona"
+  // (sino nunca tendríamos bugs :P)
   "Los envios" should "costar lo que corresponde :D" in {
     val camion = new Camion
     camion.poseeGPS = true
@@ -167,6 +169,7 @@ class EnvioSpec extends FlatSpec with Matchers {
     avion.costoEnvio should be(509325.48.pesos)
   }
 
+  // lo mismo que antes, testeen al camion por un lado, al avión por otro, etc etc
   "La ganancia de un envio" should "ser muchisima(?)" in {
     val camion = new Camion
     camion.poseeGPS = true

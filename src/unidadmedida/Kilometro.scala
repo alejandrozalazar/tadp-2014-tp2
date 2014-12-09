@@ -1,5 +1,6 @@
 package unidadmedida
 
+// lo mismo que "Dinero"
 case class Kilometro(val value: Double = 0) {
 
   def >=(vol: Kilometro): Boolean = {

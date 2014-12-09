@@ -44,9 +44,12 @@ class Avion extends Transporte {
 
   def costoIdaCentralPasadoEl20(costo: Dinero) = {
     var calendar = Calendar.getInstance();
+    // acá pueden ver como el transporte está acoplado con solo UNA fecha de salida (un solo viaje)
+    //  piensen si el costo no es del viaje más que del transporte
     calendar.set(fechaSalida.get(Calendar.YEAR), fechaSalida.get(Calendar.MONTH), fechaSalida.get(Calendar.DAY_OF_MONTH));
     var miDia = calendar.get(Calendar.DAY_OF_MONTH);
 
+    // revisen si pueden separar el concepto de cual es la sucursal "central" en vez de usar un "object" como marcador
     if (this.destino.equals(Central) && miDia >= 20) {
       costo * 0.2
     } else 0.pesos

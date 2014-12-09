@@ -7,6 +7,8 @@ import domain._
 import domain.transporte._
 import unidadmedida.Hora
 
+// "object" lo hace intesteable, como voy a hacer en mi código para testear los métodos que usen
+// a las estadísticas sin tener que testear todas las combinaciones de estadísticas a la vez?!
 object Estadisticas {
 
   implicit def intToUnidadesFactory(i: Double): UnidadesFactory =
@@ -17,11 +19,13 @@ object Estadisticas {
 
   def inicializarSucursales = {
     var suc = new HashSet[Sucursal] //RECONTRA hardcodeado papa
+    // ojo, estan definiendo valores de testing en codigo productivo!
     suc.add(Central)
     suc.add(Mendoza)
     suc.add(BahiaBlanca)
     suc.add(Rio)
     suc
+    // detalle de scala, pueden usar Set(1,2,3) sin necesidad de usar "add"
   }
   
   def vaciar = {
@@ -57,11 +61,14 @@ object Estadisticas {
     else gananciaPromedio / viajes.size
   }
   
+  // casualmente todos sus "filtros" hacen x.filter => filter debería estar acá y el parámetro es el predicate
   def gananciaPromedio(f: filtro): Dinero = (gananciaPromedioViajes compose f)(viajesRealizados)
 
   // facturacion total
 
   def facturacionTotalViajes:(HashSet[Viaje] => Dinero) = { (viajes) =>
+    // hay muchos folds con 0, pueden usar el "sum" de las colecciones, si usan un tipo Numeric;
+    //  o pueden implementar su propio implicit Numeric[T] para sus tipos (type class)
     viajes.foldLeft(0.pesos) { (total, viaje) => total + viaje.ganancia - viaje.costoFacturado }
   }
 

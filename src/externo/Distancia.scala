@@ -7,10 +7,14 @@ import domain.Mendoza
 import domain.Rio
 import domain.Sucursal
 
+// cuando se usan estas "Distancias"? para que están?
 sealed abstract class Distancia(val sucursalOrigen: Sucursal, val sucursalDestino: Sucursal, val kilometros: Kilometro, val esAerea: Boolean) {
 
 }
 
+// No crear datos de prueba en el código producción!
+//   el tp no especifica las sucursales (salvo la "casa central"), estos datos solo sirven para hacer tests
+//   entonces solo deberían estar en el código de test
 case object CentralCentral extends Distancia(Central, Central, Kilometro(0), false)
 case object CentralBahiaBlanca extends Distancia(Central, BahiaBlanca, Kilometro(600), false)
 case object CentralMendoza extends Distancia(Central, Mendoza, Kilometro(1000), false)

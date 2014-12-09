@@ -1,5 +1,6 @@
 package unidadmedida
 
+// lo mismo que en "Dinero", reimplementarlo no tiene mucha utilidad
 case class VolumenM3(val value: Double = 0) {
 
   def <=(vol: VolumenM3): Boolean = {
